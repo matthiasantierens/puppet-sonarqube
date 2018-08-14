@@ -28,6 +28,7 @@ or
     class { 'sonarqube':
       arch          => 'linux-x86-64',
       version       => '5.1,
+      edition       => 'community',
       user          => 'sonar',
       group         => 'sonar',
       service       => 'sonar',

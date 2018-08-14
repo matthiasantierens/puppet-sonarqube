@@ -13,6 +13,7 @@
 # limitations under the License.
 class sonarqube (
   $version          = '4.5.5',
+  $edition          = 'community',
   $user             = 'sonar',
   $group            = 'sonar',
   $user_system      = true,
@@ -82,6 +83,12 @@ class sonarqube (
   $tmpzip = "${download_dir}/${package_name}-${version}.zip"
   $script = "${installdir}/bin/${arch}/sonar.sh"
 
+  if $edition == 'community' {
+    $source_url = "${download_url}/${package_name}-${version}.zip"
+  } else {
+    $source_url = "${download_url}/${package_name}-${edition}-${version}.zip"
+  }
+
   if ! defined(Package[unzip]) {
     package { 'unzip':
       ensure => present,
@@ -102,7 +109,7 @@ class sonarqube (
   }
   ->
   wget::fetch { 'download-sonar':
-    source      => "${download_url}/${package_name}-${version}.zip",
+    source      => "${source_url}",
     destination => $tmpzip,
   }
   ->
