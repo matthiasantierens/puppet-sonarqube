@@ -22,7 +22,7 @@ class sonarqube (
   $host             = undef,
   $port             = 9000,
   $portAjp          = -1,
-  $download_url     = 'https://sonarsource.bintray.com/Distribution/sonarqube',
+  $download_url     = 'https://binaries.sonarsource.com/Distribution/sonarqube',
   $download_dir     = '/usr/local/src',
   $context_path     = '/',
   $arch             = $sonarqube::params::arch,
