@@ -13,15 +13,15 @@ A puppet recipe to install SonarQube (former Sonar)
 
 This is a fork of maestrodev/puppet-sonarqube with the following PRs (partially) applied:
 
-https://github.com/maestrodev/puppet-sonarqube/pull/75
-https://github.com/maestrodev/puppet-sonarqube/pull/78
-https://github.com/maestrodev/puppet-sonarqube/pull/80
-https://github.com/maestrodev/puppet-sonarqube/pull/81
-https://github.com/maestrodev/puppet-sonarqube/pull/89
-https://github.com/maestrodev/puppet-sonarqube/pull/92
-https://github.com/maestrodev/puppet-sonarqube/pull/95
-https://github.com/maestrodev/puppet-sonarqube/pull/96
-https://github.com/maestrodev/puppet-sonarqube/pull/97
+* https://github.com/maestrodev/puppet-sonarqube/pull/75
+* https://github.com/maestrodev/puppet-sonarqube/pull/78
+* https://github.com/maestrodev/puppet-sonarqube/pull/80
+* https://github.com/maestrodev/puppet-sonarqube/pull/81
+* https://github.com/maestrodev/puppet-sonarqube/pull/89
+* https://github.com/maestrodev/puppet-sonarqube/pull/92
+* https://github.com/maestrodev/puppet-sonarqube/pull/95
+* https://github.com/maestrodev/puppet-sonarqube/pull/96
+* https://github.com/maestrodev/puppet-sonarqube/pull/97
 
 
 # Usage
