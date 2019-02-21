@@ -1,12 +1,12 @@
 {
-  "name": "maestrodev-sonarqube",
-  "version": "2.6.8",
-  "author": "maestrodev",
+  "name": "fraenki-sonarqube",
+  "version": "3.0.0",
+  "author": "fraenki",
   "summary": "SonarQube installation and configuration",
   "license": "Apache-2.0",
-  "source": "http://github.com/maestrodev/puppet-sonarqube",
-  "project_page": "http://github.com/maestrodev/puppet-sonarqube",
-  "issues_url": "https://github.com/maestrodev/puppet-sonarqube/issues",
+  "source": "http://github.com/fraenki/puppet-sonarqube",
+  "project_page": "http://github.com/fraenki/puppet-sonarqube",
+  "issues_url": "https://github.com/fraenki/puppet-sonarqube/issues",
   "description": "A module to install and configure SonarQube (former Sonar)",
   "dependencies": [
     {
