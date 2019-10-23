@@ -7,7 +7,6 @@
   "source": "http://github.com/fraenki/puppet-sonarqube",
   "project_page": "http://github.com/fraenki/puppet-sonarqube",
   "issues_url": "https://github.com/fraenki/puppet-sonarqube/issues",
-  "description": "A module to install and configure SonarQube",
   "dependencies": [
     {
       "name": "puppet/wget",
@@ -86,5 +85,9 @@
       "name": "puppet",
       "version_requirement": ">= 5.0.0 < 7.0.0"
     }
-  ]
+  ],
+  "description": "A module to install and configure SonarQube",
+  "pdk-version": "1.14.0",
+  "template-url": "pdk-default#1.14.0",
+  "template-ref": "1.14.0-0-g1bf3a4e"
 }

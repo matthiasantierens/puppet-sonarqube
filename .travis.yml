@@ -1,52 +1,45 @@
 ---
-# This file is managed centrally by modulesync
-#   https://github.com/maestrodev/puppet-modulesync
-
+dist: xenial
+language: ruby
+cache: bundler
 before_install:
+  - bundle -v
   - rm -f Gemfile.lock
-
+  - gem update --system $RUBYGEMS_VERSION
+  - gem --version
+  - bundle -v
+script:
+  - 'bundle exec rake $CHECK'
+bundler_args: --without system_tests
 rvm:
-  - "2.1.8"
-
-env:
-  - PUPPET_VERSION="~> 3.7.0"
-  - PUPPET_VERSION="~> 3.6.0"
-  - PUPPET_VERSION="~> 3.5.0"
-  - PUPPET_VERSION="~> 3.4.0"
-  - PUPPET_VERSION="~> 3.3.0"
-  - PUPPET_VERSION="~> 3.2.0"
-
+  - 2.5.3
+stages:
+  - static
+  - spec
+  - acceptance
+  -
+    if: tag =~ ^v\d
+    name: deploy
 matrix:
-  exclude:
-    # No support for Ruby 2.0 before Puppet 3.2
-    - rvm: 2.0.0
-      env: PUPPET_VERSION="~> 2.7.0"
-    - rvm: 2.0.0
-      env: PUPPET_VERSION="~> 3.0.0"
-    - rvm: 2.0.0
-      env: PUPPET_VERSION="~> 3.1.0"
-    # Puppet < 3.5.0 is broken under ruby 2.1 https://tickets.puppetlabs.com/browse/PUP-1243
-    - rvm: 2.1.0
-      env: PUPPET_VERSION="~> 2.7.0"
-    - rvm: 2.1.0
-      env: PUPPET_VERSION="~> 3.0.0"
-    - rvm: 2.1.0
-      env: PUPPET_VERSION="~> 3.1.0"
-    - rvm: 2.1.0
-      env: PUPPET_VERSION="~> 3.2.0"
-    - rvm: 2.1.0
-      env: PUPPET_VERSION="~> 3.3.0"
-    - rvm: 2.1.0
-      env: PUPPET_VERSION="~> 3.4.0"
-
-deploy:
-  provider: puppetforge
-  user: maestrodev
-  password:
-    secure: "Otm0EXhVvdcqG80+M7bQy6gy+xv/x2hJuQm1PyscRAX7zSnHNDgv85DniqGPxnJlLKxjrWwLwzDQ1+UO5WpaBn0/Oiv2U+M8VrmKq9/YkO3XgL93HZNmKKpJnj+SBR6ZaCml00AbwfTLOOBkUBMHwLDlpkClSvB79rYmKJxkDh0="
-  on:
-    tags: true
-    # all_branches is required to use tags
-    all_branches: true
-    # Only publish if our main Ruby target builds
-    condition: "$PUPPET_VERSION = '~> 3.6.0'"
+  fast_finish: true
+  include:
+    -
+      env: CHECK="check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop syntax lint metadata_lint"
+      stage: static
+    -
+      env: PUPPET_GEM_VERSION="~> 5.0" CHECK=parallel_spec
+      rvm: 2.4.5
+      stage: spec
+    -
+      env: PUPPET_GEM_VERSION="~> 6.0" CHECK=parallel_spec
+      rvm: 2.5.3
+      stage: spec
+    -
+      env: DEPLOY_TO_FORGE=yes
+      stage: deploy
+branches:
+  only:
+    - master
+    - /^v\d/
+notifications:
+  email: false
