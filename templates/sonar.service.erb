@@ -7,7 +7,7 @@ Wants=network-online.target
 LimitNOFILE=65536
 LimitNPROC=4096
 Environment=MAX_MAP_COUNT=262144
-ExecStartPre=/sbin/sysctl -q -w vm.max_map_count=$MAX_MAP_COUNT
+ExecStartPre=/sbin/sysctl -q -w vm.max_map_count=${MAX_MAP_COUNT}
 ExecStart=<%= @installroot.to_s -%>/sonar/bin/<%= @arch.to_s.gsub(/_/,'-') -%>/sonar.sh start
 ExecStop=<%= @installroot.to_s -%>/sonar/bin/<%= @arch.to_s.gsub(/_/,'-') -%>/sonar.sh stop
 ExecReload=<%= @installroot.to_s -%>/sonar/bin/<%= @arch.to_s.gsub(/_/,'-') -%>/sonar.sh restart
