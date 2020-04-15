@@ -4,9 +4,9 @@
   "author": "fraenki",
   "summary": "SonarQube installation and configuration",
   "license": "Apache-2.0",
-  "source": "http://github.com/fraenki/puppet-sonarqube",
-  "project_page": "http://github.com/fraenki/puppet-sonarqube",
-  "issues_url": "https://github.com/fraenki/puppet-sonarqube/issues",
+  "source": "http://github.com/markt-de/puppet-sonarqube",
+  "project_page": "http://github.com/markt-de/puppet-sonarqube",
+  "issues_url": "https://github.com/markt-de/puppet-sonarqube/issues",
   "tags": ["sonarqube", "sonar", "code", "quality", "inspection", "security"],
   "dependencies": [
     {
