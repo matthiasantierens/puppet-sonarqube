@@ -62,10 +62,6 @@ RUN_AS_USER=<%= @user %>
 # chkconfig: 2345 90 10
 # description: Test Wrapper Sample Application
 
-# Maximum number of VMA (Virtual Memory Areas) a process can own
-MAX_MAP_COUNT=262144
-sysctl -q -w vm.max_map_count=$MAX_MAP_COUNT
-
 # Do not modify anything beyond this point
 #-----------------------------------------------------------------------------
 
