@@ -17,18 +17,18 @@ class sonarqube::runner::install (
   archive { $tmpzip:
     ensure => present,
     source => "${download_url}/${version}/sonar-runner-dist-${version}.zip",
-  } ->
+  }
 
-  file { "${installroot}/${package_name}-${version}":
+  -> file { "${installroot}/${package_name}-${version}":
     ensure => directory,
-  } ->
+  }
 
-  file { "${installroot}/${package_name}":
+  -> file { "${installroot}/${package_name}":
     ensure => link,
     target => "${installroot}/${package_name}-${version}",
-  } ->
+  }
 
-  exec { 'unzip-sonar-runner':
+  -> exec { 'unzip-sonar-runner':
     command => "unzip -o ${tmpzip} -d ${installroot}",
     creates => "${installroot}/sonar-runner-${version}/bin",
     require => [Package[unzip], Wget::Fetch['download-sonar-runner']],
@@ -38,6 +38,7 @@ class sonarqube::runner::install (
   file { '/etc/profile.d/sonarhome.sh':
     content => "export SONAR_RUNNER_HOME=${installroot}/${package_name}-${version}",
   }
+
   file { '/usr/bin/sonar-runner':
     ensure => link,
     target => "${installroot}/${package_name}-${version}/bin/sonar-runner",

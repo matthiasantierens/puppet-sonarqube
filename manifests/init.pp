@@ -88,59 +88,48 @@ class sonarqube (
     managehome => false,
     system     => $user_system,
   }
-  ->
-  group { $group:
+  -> group { $group:
     ensure => present,
     system => $user_system,
   }
-  ->
-  archive { $tmpzip:
+  -> archive { $tmpzip:
     ensure => present,
     source => $source_url,
   }
-  ->
+
   # ===== Create folder structure =====
   # so uncompressing new sonar versions at update time use the previous sonar home,
   # installing new extensions and plugins over the old ones, reusing the db,...
 
   # Sonar home
-  file { $real_home:
+  -> file { $real_home:
     ensure => directory,
     mode   => '0700',
   }
-  ->
-  file { "${installroot}/${package_name}-${version}":
+  -> file { "${installroot}/${package_name}-${version}":
     ensure => directory,
   }
-  ->
-  file { $installdir:
+  -> file { $installdir:
     ensure => link,
     target => "${installroot}/${package_name}-${version}",
     notify => Service['sonarqube'],
   }
-  ->
-  sonarqube::move_to_home { 'data': }
-  ->
-  sonarqube::move_to_home { 'extras': }
-  ->
-  sonarqube::move_to_home { 'extensions': }
-  ->
-  sonarqube::move_to_home { 'logs': }
-  ->
+  -> sonarqube::move_to_home { 'data': }
+  -> sonarqube::move_to_home { 'extras': }
+  -> sonarqube::move_to_home { 'extensions': }
+  -> sonarqube::move_to_home { 'logs': }
   # ===== Install SonarQube =====
-  exec { 'untar':
+  -> exec { 'untar':
     command => "unzip -o ${tmpzip} -d ${installroot} && chown -R \
       ${user}:${group} ${installroot}/${package_name}-${version} && chown -R ${user}:${group} ${real_home}",
     creates => "${installroot}/${package_name}-${version}/bin",
     notify  => Service['sonarqube'],
   }
-  ->
-  file { $script:
+  -> file { $script:
     mode    => '0755',
     content => template('sonarqube/sonar.sh.erb'),
   }
-  ->
-  file { "/etc/init.d/${service}":
+  -> file { "/etc/init.d/${service}":
     ensure => link,
     target => $script,
   }
@@ -174,13 +163,11 @@ class sonarqube (
     content => template("${module_name}/cleanup-old-plugin-versions.sh.erb"),
     mode    => '0755',
   }
-  ->
-  file { '/tmp/cleanup-old-sonarqube-versions.sh':
+  -> file { '/tmp/cleanup-old-sonarqube-versions.sh':
     content => template("${module_name}/cleanup-old-sonarqube-versions.sh.erb"),
     mode    => '0755',
   }
-  ->
-  exec { 'remove-old-versions-of-sonarqube':
+  -> exec { 'remove-old-versions-of-sonarqube':
     command     => "/tmp/cleanup-old-sonarqube-versions.sh ${installroot} ${version}",
     path        => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin',
     refreshonly => true,
