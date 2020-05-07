@@ -5,9 +5,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+This is a new major release in an ongoing effort to modernize the module.
+
+### Added
+- Enable unit tests on Travis CI
 
 ### Changed
+- Enforce Puppet 4 data types
 - Replace dependency puppet/wget with puppet/archive ([#4])
+- Convert templates from ERB to EPP
+- Convert to Puppet Strings
+- Declare classes private, remove class parameters from private classes
+
+### Fixed
+- Assorted style fixes
+- Fix unit tests
+- Fixes for very old bugs that were uncovered by the resurrected unit tests
 
 ## [3.1.0] - 2020-04-20
 
