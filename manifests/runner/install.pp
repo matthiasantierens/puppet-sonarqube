@@ -1,9 +1,9 @@
 # Installation of SonarQube Runner
 class sonarqube::runner::install (
-  $package_name,
-  $version,
-  $download_url,
-  $installroot,
+  String $package_name,
+  String $version,
+  String $download_url,
+  Stdlib::Absolutepath $installroot,
 ) {
   if ! defined(Package[unzip]) {
     package { 'unzip':

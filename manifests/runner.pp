@@ -2,12 +2,12 @@
 #
 # Install the sonar-runner
 class sonarqube::runner (
-  $package_name     = 'sonar-runner',
-  $version          = '2.4',
-  $download_url     = 'http://repo1.maven.org/maven2/org/codehaus/sonar/runner/sonar-runner-dist',
+  String $package_name = 'sonar-runner',
+  String $version = '2.4',
+  String $download_url = 'http://repo1.maven.org/maven2/org/codehaus/sonar/runner/sonar-runner-dist',
   Stdlib::Absolutepath $installroot = '/usr/local',
-  $sonarqube_server = 'http://sonar.local:9000/',
-  $jdbc             = {
+  String $sonarqube_server = 'http://sonar.local:9000/',
+  Hash $jdbc = {
     url      => 'jdbc:h2:tcp://localhost:9092/sonar',
     username => 'sonar',
     password => 'sonar',
