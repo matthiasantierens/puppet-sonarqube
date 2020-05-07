@@ -39,20 +39,6 @@
       ]
     },
     {
-      "operatingsystem": "OracleLinux",
-      "operatingsystemrelease": [
-        "6",
-        "7"
-      ]
-    },
-    {
-      "operatingsystem": "Scientific",
-      "operatingsystemrelease": [
-        "6",
-        "7"
-      ]
-    },
-    {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
         "8",
@@ -64,7 +50,8 @@
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
         "16.04",
-        "18.04"
+        "18.04",
+        "20.04"
       ]
     }
   ],

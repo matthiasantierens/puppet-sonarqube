@@ -16,6 +16,7 @@ This is a new major release in an ongoing effort to modernize the module.
 - Convert templates from ERB to EPP
 - Convert to Puppet Strings
 - Declare classes private, remove class parameters from private classes
+- Update OS support: RHEL/CentOS 8, Ubuntu 20.04
 
 ### Fixed
 - Assorted style fixes
