@@ -11,7 +11,7 @@ class sonarqube (
   $port             = 9000,
   $portajp          = -1,
   $download_url     = 'https://binaries.sonarsource.com/Distribution/sonarqube',
-  $download_dir     = '/usr/local/src',
+  Stdlib::Absolutepath $download_dir = '/usr/local/src',
   $context_path     = '/',
   $arch             = $sonarqube::params::arch,
   $https            = {},
@@ -42,7 +42,6 @@ class sonarqube (
   $search_port      = '9001',
   $config           = undef,
 ) inherits sonarqube::params {
-  validate_absolute_path($download_dir)
   Exec {
     path => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin',
   }
@@ -92,8 +91,9 @@ class sonarqube (
     ensure => present,
     system => $user_system,
   }
-  -> archive { $tmpzip:
+  -> archive { 'download-sonar':
     ensure => present,
+    path   => $tmpzip,
     source => $source_url,
   }
 

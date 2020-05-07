@@ -4,9 +4,9 @@ describe 'sonarqube' do
   let(:sonar_properties) { '/usr/local/sonar/conf/sonar.properties' }
 
   context 'when installing version 4', :compile do
-    let(:params) { { version: '4.5.5' } }
+    let(:params) { { version: '7.9' } }
 
-    it { is_expected.to contain_wget__fetch('download-sonar').with_source('https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-4.5.5.zip') }
+    it { is_expected.to contain_archive('download-sonar').with_source('https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.9.zip') }
   end
 
   context 'when crowd configuration is supplied', :compile do
@@ -60,7 +60,7 @@ describe 'sonarqube' do
     it { is_expected.to contain_file(sonar_properties).with_content(%r{sonar.security.localUsers=foo}) }
     it { is_expected.to contain_file(sonar_properties).with_content(%r{sonar.security.realm=LDAP}) }
     it { is_expected.to contain_file(sonar_properties).with_content(%r{ldap.url=ldap:\/\/myserver.mycompany.com}) }
-    it { is_expected.to contain_file(sonar_properties).with_content(%r{ldap.user.baseDn: ou=Users,dc=mycompany,dc=com}) }
+    it { is_expected.to contain_file(sonar_properties).with_content(%r{ldap.user.baseDn=ou=Users,dc=mycompany,dc=com}) }
   end
 
   context 'when ldap local users configuration is supplied as array', :compile do
@@ -78,7 +78,7 @@ describe 'sonarqube' do
     it { is_expected.to contain_file(sonar_properties).with_content(%r{sonar.security.localUsers=foo,bar}) }
     it { is_expected.to contain_file(sonar_properties).with_content(%r{sonar.security.realm=LDAP}) }
     it { is_expected.to contain_file(sonar_properties).with_content(%r{ldap.url=ldap:\/\/myserver.mycompany.com}) }
-    it { is_expected.to contain_file(sonar_properties).with_content(%r{ldap.user.baseDn: ou=Users,dc=mycompany,dc=com}) }
+    it { is_expected.to contain_file(sonar_properties).with_content(%r{ldap.user.baseDn=ou=Users,dc=mycompany,dc=com}) }
   end
 
   context 'when no ldap local users configuration is supplied', :compile do
@@ -95,7 +95,7 @@ describe 'sonarqube' do
     it { is_expected.to contain_file(sonar_properties).without_content(%r{sonar.security.localUsers}) }
     it { is_expected.to contain_file(sonar_properties).with_content(%r{sonar.security.realm=LDAP}) }
     it { is_expected.to contain_file(sonar_properties).with_content(%r{ldap.url=ldap:\/\/myserver.mycompany.com}) }
-    it { is_expected.to contain_file(sonar_properties).with_content(%r{ldap.user.baseDn: ou=Users,dc=mycompany,dc=com}) }
+    it { is_expected.to contain_file(sonar_properties).with_content(%r{ldap.user.baseDn=ou=Users,dc=mycompany,dc=com}) }
   end
 
   context 'when no ldap configuration is supplied', :compile do
