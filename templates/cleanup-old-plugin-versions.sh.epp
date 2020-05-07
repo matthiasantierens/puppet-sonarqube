@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 cd $1
 for file in $(ls | grep $2)

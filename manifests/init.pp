@@ -129,7 +129,7 @@ class sonarqube (
   }
   -> file { $script:
     mode    => '0755',
-    content => template('sonarqube/sonar.sh.erb'),
+    content => epp("${module_name}/sonar.sh.epp"),
   }
   -> file { "/etc/init.d/${service}":
     ensure => link,
@@ -141,7 +141,7 @@ class sonarqube (
     owner   => root,
     group   => root,
     mode    => '0644',
-    content => template("${module_name}/sonar.service.erb")
+    content => epp("${module_name}/sonar.service.epp")
   }
 
   # Sonar configuration files
@@ -154,7 +154,7 @@ class sonarqube (
     }
   } else {
     file { "${installdir}/conf/sonar.properties":
-      content => template('sonarqube/sonar.properties.erb'),
+      content => epp("${module_name}/sonar.properties.epp"),
       require => Exec['untar'],
       notify  => Service['sonarqube'],
       mode    => '0600',
@@ -162,11 +162,11 @@ class sonarqube (
   }
 
   file { '/tmp/cleanup-old-plugin-versions.sh':
-    content => template("${module_name}/cleanup-old-plugin-versions.sh.erb"),
+    content => epp("${module_name}/cleanup-old-plugin-versions.sh.epp"),
     mode    => '0755',
   }
   -> file { '/tmp/cleanup-old-sonarqube-versions.sh':
-    content => template("${module_name}/cleanup-old-sonarqube-versions.sh.erb"),
+    content => epp("${module_name}/cleanup-old-sonarqube-versions.sh.epp"),
     mode    => '0755',
   }
   -> exec { 'remove-old-versions-of-sonarqube':

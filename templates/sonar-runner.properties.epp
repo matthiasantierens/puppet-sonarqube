@@ -6,14 +6,14 @@
 #No information about specific project should appear here
 
 #----- Default SonarQube server
-sonar.host.url=<%= @sonarqube_server %>
+sonar.host.url=<%= $sonarqube::runner::sonarqube_server %>
 
-<% if !@jdbc.empty? -%>
+<% if !empty($sonarqube::runner::jdbc) { -%>
 #----- Database
-sonar.jdbc.url=<%= @jdbc['url'] %>
-sonar.jdbc.username=<%= @jdbc['username'] %>
-sonar.jdbc.password=<%= @jdbc['password'] %>
-<% end -%>
+sonar.jdbc.url=<%= $sonarqube::runner::jdbc['url'] %>
+sonar.jdbc.username=<%= $sonarqube::runner::jdbc['username'] %>
+sonar.jdbc.password=<%= $sonarqube::runner::jdbc['password'] %>
+<% } -%>
 
 #----- Default source code encoding
 #sonar.sourceEncoding=UTF-8

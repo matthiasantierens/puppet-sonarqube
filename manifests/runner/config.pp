@@ -4,6 +4,6 @@ class sonarqube::runner::config {
 
   # Sonar Runner configuration file
   file { "${sonarqube::runner::installroot}/${sonarqube::runner::package_name}-${sonarqube::runner::version}/conf/sonar-runner.properties":
-    content => template('sonarqube/sonar-runner.properties.erb'),
+    content => epp("${module_name}/sonar-runner.properties.epp"),
   }
 }
