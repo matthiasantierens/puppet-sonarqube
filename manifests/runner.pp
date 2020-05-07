@@ -1,6 +1,4 @@
-# Class: sonarqube::runner
-#
-# Install the sonar-runner
+# @summary Install and configure SonarQube Runner
 class sonarqube::runner (
   String $package_name = 'sonar-runner',
   String $version = '2.4',

@@ -11,10 +11,11 @@
     - [Basic usage](#basic-usage)
     - [SonarQube Plugins](#sonarqube-plugins)
     - [LDAP Configuration](#ldap-configuration)
-3. [Development](#development)
+3. [Reference](#reference)
+4. [Development](#development)
     - [Contributing](#contributing)
     - [Fork](#fork)
-4. [License](#license)
+5. [License](#license)
 
 ## Overview
 
@@ -108,6 +109,10 @@ sonarqube::plugin { 'sonar-ldap-plugin':
   notify     => Service['sonar'],
 }
 ```
+
+## Reference
+
+Classes and parameters are documented in [REFERENCE.md](REFERENCE.md).
 
 ## Development
 

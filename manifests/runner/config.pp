@@ -1,4 +1,5 @@
-# Configuration of SonarQube Runner
+# @summary Configuration of SonarQube Runner
+# @api private
 class sonarqube::runner::config {
   assert_private()
 

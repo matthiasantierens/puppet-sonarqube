@@ -1,4 +1,4 @@
-# copy folders susceptible to change from installation folder to /var/local/sonar and symlink
+# @summary Symlink a folder to SonarQube's installation directory
 define sonarqube::move_to_home (
   Stdlib::Absolutepath $home,
 ) {

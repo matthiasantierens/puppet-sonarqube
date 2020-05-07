@@ -1,11 +1,22 @@
-# Definition: plugin
+# @summary Install a SonarQube plugin
 #
-# A puppet definition for Sonar plugin installation
+# @param artifactid
+#   Namevar. Specifies the name of the plugin.
 #
-define sonarqube::plugin(
+# @param ensure
+#   Specifies the ensure state for the plugin.
+#   Default: `present`
+#
+# @param groupid
+#   Specifies the groupid to use with maven.
+#
+# @param version
+#   Specifies the version of the plugin.
+#
+define sonarqube::plugin (
   String $version,
-  String $ensure = present,
   String $artifactid = $name,
+  Enum['present','absent'] $ensure = present,
   String $groupid = 'org.codehaus.sonar-plugins',
 ) {
   $plugin_name = "${artifactid}-${version}.jar"

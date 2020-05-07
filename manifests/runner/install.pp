@@ -1,4 +1,5 @@
-# Installation of SonarQube Runner
+# @summary Installation of SonarQube Runner
+# @api private
 class sonarqube::runner::install {
   assert_private()
 
