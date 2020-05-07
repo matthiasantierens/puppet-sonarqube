@@ -18,18 +18,7 @@ class sonarqube::runner (
   }
 
   anchor { 'sonarqube::runner::begin': }
-  -> class { '::sonarqube::runner::install':
-    package_name => $package_name,
-    version      => $version,
-    download_url => $download_url,
-    installroot  => $installroot,
-  }
-  -> class { '::sonarqube::runner::config':
-    package_name     => $package_name,
-    version          => $version,
-    installroot      => $installroot,
-    jdbc             => $jdbc,
-    sonarqube_server => $sonarqube_server,
-  }
+  -> class { '::sonarqube::runner::install': }
+  -> class { '::sonarqube::runner::config': }
   ~> anchor { 'sonarqube::runner::end': }
 }

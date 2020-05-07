@@ -1,10 +1,7 @@
 # Installation of SonarQube Runner
-class sonarqube::runner::install (
-  String $package_name,
-  String $version,
-  String $download_url,
-  Stdlib::Absolutepath $installroot,
-) {
+class sonarqube::runner::install {
+  assert_private()
+
   if ! defined(Package[unzip]) {
     package { 'unzip':
       ensure => present,
@@ -12,36 +9,36 @@ class sonarqube::runner::install (
     }
   }
 
-  $tmpzip = "/usr/local/src/${package_name}-dist-${version}.zip"
+  $tmpzip = "/usr/local/src/${sonarqube::runner::package_name}-dist-${sonarqube::runner::version}.zip"
 
   archive { 'download-sonar-runner':
     ensure => present,
     path   => $tmpzip,
-    source => "${download_url}/${version}/sonar-runner-dist-${version}.zip",
+    source => "${sonarqube::runner::download_url}/${sonarqube::runner::version}/sonar-runner-dist-${sonarqube::runner::version}.zip",
   }
 
-  -> file { "${installroot}/${package_name}-${version}":
+  -> file { "${sonarqube::runner::installroot}/${sonarqube::runner::package_name}-${sonarqube::runner::version}":
     ensure => directory,
   }
 
-  -> file { "${installroot}/${package_name}":
+  -> file { "${sonarqube::runner::installroot}/${sonarqube::runner::package_name}":
     ensure => link,
-    target => "${installroot}/${package_name}-${version}",
+    target => "${sonarqube::runner::installroot}/${sonarqube::runner::package_name}-${sonarqube::runner::version}",
   }
 
   -> exec { 'unzip-sonar-runner':
-    command => "unzip -o ${tmpzip} -d ${installroot}",
-    creates => "${installroot}/sonar-runner-${version}/bin",
+    command => "unzip -o ${tmpzip} -d ${sonarqube::runner::installroot}",
+    creates => "${sonarqube::runner::installroot}/sonar-runner-${sonarqube::runner::version}/bin",
     require => [Package[unzip], Archive['download-sonar-runner']],
   }
 
   # Sonar settings for terminal sessions.
   file { '/etc/profile.d/sonarhome.sh':
-    content => "export SONAR_RUNNER_HOME=${installroot}/${package_name}-${version}",
+    content => "export SONAR_RUNNER_HOME=${sonarqube::runner::installroot}/${sonarqube::runner::package_name}-${sonarqube::runner::version}",
   }
 
   file { '/usr/bin/sonar-runner':
     ensure => link,
-    target => "${installroot}/${package_name}-${version}/bin/sonar-runner",
+    target => "${sonarqube::runner::installroot}/${sonarqube::runner::package_name}-${sonarqube::runner::version}/bin/sonar-runner",
   }
 }

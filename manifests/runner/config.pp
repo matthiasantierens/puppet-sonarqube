@@ -1,17 +1,9 @@
 # Configuration of SonarQube Runner
-class sonarqube::runner::config (
-  String $package_name,
-  String $version,
-  Stdlib::Absolutepath $installroot,
-  String $sonarqube_server = 'http://localhost:9000',
-  Hash $jdbc = {
-    url      => 'jdbc:h2:tcp://localhost:9092/sonar',
-    username => 'sonar',
-    password => 'sonar',
-  },
-) {
+class sonarqube::runner::config {
+  assert_private()
+
   # Sonar Runner configuration file
-  file { "${installroot}/${package_name}-${version}/conf/sonar-runner.properties":
+  file { "${sonarqube::runner::installroot}/${sonarqube::runner::package_name}-${sonarqube::runner::version}/conf/sonar-runner.properties":
     content => template('sonarqube/sonar-runner.properties.erb'),
   }
 }
