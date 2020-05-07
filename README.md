@@ -105,6 +105,7 @@ This is a fork of maestrodev/puppet-sonarqube with the following PRs (partially)
 
 # License
 
+    Copyright 2019-2020 markt.de GmbH & Co. KG
     Copyright 2011-2013 MaestroDev, Inc
 
     Licensed under the Apache License, Version 2.0 (the "License");
