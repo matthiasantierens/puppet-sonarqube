@@ -51,9 +51,6 @@ class sonarqube (
     group => $group,
   }
 
-  # wget from https://github.com/maestrodev/puppet-wget
-  include wget
-
   $package_name = 'sonarqube'
 
   if $home != undef {
@@ -97,9 +94,9 @@ class sonarqube (
     system => $user_system,
   }
   ->
-  wget::fetch { 'download-sonar':
-    source      => "${source_url}",
-    destination => $tmpzip,
+  archive { $tmpzip:
+    ensure => present,
+    source => $source_url,
   }
   ->
   # ===== Create folder structure =====

@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Replace dependency puppet/wget with puppet/archive ([#4])
+
 ## [3.1.0] - 2020-04-20
 
 ### Changed
@@ -37,5 +40,6 @@ migrate from maestrodev/sonarqube to this version with only minor modifications.
 [Unreleased]: https://github.com/markt-de/puppet-sonarqube/compare/v3.1.0...HEAD
 [3.1.0]: https://github.com/markt-de/puppet-sonarqube/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/markt-de/puppet-sonarqube/compare/v2.6.7...v3.0.0
+[#4]: https://github.com/markt-de/puppet-sonarqube/pull/4
 [#2]: https://github.com/markt-de/puppet-sonarqube/pull/2
 [#1]: https://github.com/markt-de/puppet-sonarqube/pull/1

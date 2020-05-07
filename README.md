@@ -89,13 +89,6 @@ The `sonarqube` class provides an easy way to configure security with LDAP, Crow
       notify     => Service['sonar'],
     }
 
-
-# Module Requirements
-
-* puppet/wget
-* maestrodev/maven (only if additional SonarQube plugins are needed to be installed)
-* puppetlabs/stdlib
-
 # Fork
 
 This is a fork of maestrodev/puppet-sonarqube with the following PRs (partially) applied:
