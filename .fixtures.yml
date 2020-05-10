@@ -2,6 +2,10 @@ fixtures:
   repositories:
     "archive": "https://github.com/voxpupuli/puppet-archive.git"
     "facts": "https://github.com/puppetlabs/puppetlabs-facts.git"
+    "java": "git://github.com/puppetlabs/puppetlabs-java.git"
+    "maven": "git://github.com/maestrodev/puppet-maven.git"
+    "provision": "https://github.com/puppetlabs/provision.git"
+    "puppet_agent": "https://github.com/puppetlabs/puppetlabs-puppet_agent.git"
     "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
   symlinks:
     sonarqube: "#{source_dir}"
