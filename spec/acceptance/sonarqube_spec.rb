@@ -3,6 +3,8 @@ require 'spec_helper_acceptance'
 describe 'sonarqube' do
   let(:installroot) { '/usr/local/sonar' }
   let(:home) { '/var/local/sonar' }
+  let(:user) { 'sonar' }
+  let(:group) { 'sonar' }
 
   before(:all) do
     apply_manifest(%(
@@ -28,8 +30,15 @@ describe 'sonarqube' do
     end
 
     it { apply_manifest(pp, catch_failures: true) }
-    it { expect(file("#{installroot}/data")).to be_linked_to("#{home}/data") }
+
+    it { expect(file(home)).to be_directory }
+    it { expect(file(home)).to be_owned_by user }
+    it { expect(file(home)).to be_grouped_into group }
+    it { expect(file(home)).to be_mode 700 }
     it { expect(file("#{home}/data")).to be_directory }
+
+    it { expect(file("#{installroot}/data")).to be_linked_to("#{home}/data") }
+    it { expect(file("#{installroot}/conf/sonar.properties")).to be_file }
     it { expect(file("#{installroot}/conf/sonar.properties").content).not_to match(%r{^ldap}) }
 
     describe service('sonar') do

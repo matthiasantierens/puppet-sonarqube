@@ -21,6 +21,7 @@ This is a new major release in an ongoing effort to modernize the module.
 - Convert templates from ERB to EPP
 - Convert to Puppet Strings
 - Declare classes private, remove class parameters from private classes
+- Split main class into `sonarqube::install`, `sonarqube::config` and `sonarqube::service`
 
 ### Fixed
 - Fix for error "missing property sonar.embeddedDatabase.port" ([md#76])

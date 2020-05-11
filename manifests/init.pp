@@ -60,6 +60,9 @@
 # @param log_folder
 #   Specifies the log directory for SonarQube.
 #
+# @param package_name
+#   Specifies the basename of the SonarQube archive.
+#
 # @param pam
 #   Specifies the required configuration to enable PAM authentication.
 #
@@ -109,6 +112,7 @@ class sonarqube (
   String $group = 'sonar',
   Hash $http_proxy = {},
   Hash $https = {},
+  String $home = '/var/local/sonar',
   Stdlib::Absolutepath $installroot = '/usr/local',
   Hash $jdbc = {
     url => 'jdbc:h2:tcp://127.0.0.1:9092/sonar',
@@ -124,6 +128,7 @@ class sonarqube (
   Hash $ldap = {},
   # ldap and pam are mutually exclusive. Setting $ldap will annihilate the setting of $pam
   Stdlib::Absolutepath $log_folder = '/var/local/sonar/logs',
+  String $package_name = 'sonarqube',
   Hash $pam = {},
   Integer $port = 9000,
   Integer $portajp = -1,
@@ -140,7 +145,6 @@ class sonarqube (
   Optional[String] $ce_java_opts = undef,
   Optional[Integer] $ce_workercount = undef,
   Optional[String] $config = undef,
-  Optional[String] $home = undef,
   Optional[String] $host = undef,
   Optional[String] $search_java_opts = undef,
   Optional[String] $web_java_opts = undef,
@@ -149,157 +153,18 @@ class sonarqube (
     path => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin',
   }
   File {
-    owner => $user,
-    group => $group,
+    owner => $sonarqube::user,
+    group => $sonarqube::group,
   }
 
-  $package_name = 'sonarqube'
-
-  if $home != undef {
-    $real_home = $home
-  } else {
-    $real_home = '/var/local/sonar'
-  }
-  Sonarqube::Move_to_home {
-    home => $real_home,
-  }
-
-  $extensions_dir = "${real_home}/extensions"
+  $extensions_dir = "${sonarqube::home}/extensions"
   $plugin_dir = "${extensions_dir}/plugins"
 
-  $installdir = "${installroot}/${service}"
-  $tmpzip = "${download_dir}/${package_name}-${version}.zip"
-  $script = "${installdir}/bin/${arch}/sonar.sh"
+  $installdir = "${sonarqube::installroot}/${sonarqube::service}"
+  $tmpzip = "${sonarqube::download_dir}/${sonarqube::package_name}-${sonarqube::version}.zip"
+  $script = "${installdir}/bin/${sonarqube::arch}/sonar.sh"
 
-  if $edition == 'community' {
-    $source_url = "${download_url}/${package_name}-${version}.zip"
-  } else {
-    $source_url = "${download_url}/${package_name}-${edition}-${version}.zip"
-  }
-
-  if ! defined(Package[unzip]) {
-    package { 'unzip':
-      ensure => present,
-      before => Exec[untar],
-    }
-  }
-
-  user { $user:
-    ensure     => present,
-    home       => $real_home,
-    managehome => false,
-    system     => $user_system,
-  }
-  -> group { $group:
-    ensure => present,
-    system => $user_system,
-  }
-  -> archive { 'download-sonar':
-    ensure => present,
-    path   => $tmpzip,
-    source => $source_url,
-  }
-
-  # ===== Create folder structure =====
-  # so uncompressing new sonar versions at update time use the previous sonar home,
-  # installing new extensions and plugins over the old ones, reusing the db,...
-
-  # Sonar home
-  -> file { $real_home:
-    ensure => directory,
-    mode   => '0700',
-  }
-  -> file { "${installroot}/${package_name}-${version}":
-    ensure => directory,
-  }
-  -> file { $installdir:
-    ensure => link,
-    target => "${installroot}/${package_name}-${version}",
-    notify => Service['sonarqube'],
-  }
-  -> sonarqube::move_to_home { 'data': }
-  -> sonarqube::move_to_home { 'extras': }
-  -> sonarqube::move_to_home { 'extensions': }
-  -> sonarqube::move_to_home { 'logs': }
-  # ===== Install SonarQube =====
-  -> exec { 'untar':
-    command => "unzip -o ${tmpzip} -d ${installroot} && chown -R \
-      ${user}:${group} ${installroot}/${package_name}-${version} && chown -R ${user}:${group} ${real_home}",
-    creates => "${installroot}/${package_name}-${version}/bin",
-    notify  => Service['sonarqube'],
-  }
-  -> file_line { 'set PIDDIR in startup script':
-    ensure   => present,
-    path     => $script,
-    line     => "PIDDIR=${real_home}",
-    match    => '^PIDDIR=',
-    multiple => true,
-  }
-  -> file_line { 'set RUN_AS_USER in startup script':
-    ensure   => present,
-    path     => $script,
-    line     => "RUN_AS_USER=${user}",
-    match    => '^RUN_AS_USER=',
-    # insert after PIDDIR of no match is found
-    after    => '^PIDDIR=',
-    multiple => true,
-  }
-  -> file { "/etc/init.d/${service}":
-    ensure => link,
-    target => $script,
-  }
-
-  file { '/etc/systemd/system/sonar.service':
-    ensure  => file,
-    owner   => root,
-    group   => root,
-    mode    => '0644',
-    content => epp("${module_name}/sonar.service.epp")
-  }
-
-  # Sonar configuration files
-  if $config != undef {
-    file { "${installdir}/conf/sonar.properties":
-      source  => $config,
-      require => Exec['untar'],
-      notify  => Service['sonarqube'],
-      mode    => '0600',
-    }
-  } else {
-    file { "${installdir}/conf/sonar.properties":
-      content => epp("${module_name}/sonar.properties.epp"),
-      require => Exec['untar'],
-      notify  => Service['sonarqube'],
-      mode    => '0600',
-    }
-  }
-
-  file { '/tmp/cleanup-old-plugin-versions.sh':
-    content => epp("${module_name}/cleanup-old-plugin-versions.sh.epp"),
-    mode    => '0755',
-  }
-  -> file { '/tmp/cleanup-old-sonarqube-versions.sh':
-    content => epp("${module_name}/cleanup-old-sonarqube-versions.sh.epp"),
-    mode    => '0755',
-  }
-  -> exec { 'remove-old-versions-of-sonarqube':
-    command     => "/tmp/cleanup-old-sonarqube-versions.sh ${installroot} ${version}",
-    path        => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin',
-    refreshonly => true,
-    subscribe   => File["${installroot}/${package_name}-${version}"],
-  }
-
-  # The plugins directory. Useful to later reference it from the plugin definition
-  file { $plugin_dir:
-    ensure => directory,
-  }
-
-  service { 'sonarqube':
-    ensure     => running,
-    name       => $service,
-    hasrestart => true,
-    hasstatus  => true,
-    enable     => true,
-    require    => [ File["/etc/init.d/${service}"], File['/etc/systemd/system/sonar.service'] ]
-  }
+  class { 'sonarqube::install': }
+  -> class { 'sonarqube::config': }
+  -> class { 'sonarqube::service': }
 }

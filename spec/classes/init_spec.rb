@@ -3,10 +3,14 @@ require 'spec_helper'
 describe 'sonarqube' do
   let(:sonar_properties) { '/usr/local/sonar/conf/sonar.properties' }
 
-  context 'when installing version 4', :compile do
+  context 'when installing LTS version', :compile do
     let(:params) { { version: '7.9' } }
 
-    it { is_expected.to contain_archive('download-sonar').with_source('https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.9.zip') }
+    it { is_expected.to contain_class('sonarqube::install') }
+    it { is_expected.to contain_class('sonarqube::config') }
+    it { is_expected.to contain_class('sonarqube::service') }
+
+    it { is_expected.to contain_archive('download sonarqube distribution').with_source('https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.9.zip') }
   end
 
   context 'when crowd configuration is supplied', :compile do
