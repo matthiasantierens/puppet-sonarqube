@@ -8,20 +8,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 This is a new major release in an ongoing effort to modernize the module.
 
 ### Added
-- Enable unit tests on Travis CI
+- Enable unit/acceptance tests on Travis CI
+- Add support for RHEL/CentOS 8, Ubuntu 20.04
 
 ### Changed
+- Remove JDBC_URL from config for embedded database (avoids a SonarQube warning)
+- Remove template for sonar.sh (use the one that comes bundled with SonarQube)
+- Change name of PID file in systemd service (requires the bundled sonar.sh)
+- Officially drop support for SonarQube <7.0
 - Enforce Puppet 4 data types
 - Replace dependency puppet/wget with puppet/archive ([#4])
 - Convert templates from ERB to EPP
 - Convert to Puppet Strings
 - Declare classes private, remove class parameters from private classes
-- Update OS support: RHEL/CentOS 8, Ubuntu 20.04
 
 ### Fixed
+- Fix for error "missing property sonar.embeddedDatabase.port" ([md#76])
+- Fix name of PID file on recent versions of SonarQube
 - Assorted style fixes
-- Fix unit tests
-- Fixes for very old bugs that were uncovered by the resurrected unit tests
+- Fix unit/acceptance tests
+- Fix very old bugs that were uncovered by the resurrected tests
 
 ## [3.1.0] - 2020-04-20
 
@@ -57,3 +63,4 @@ migrate from maestrodev/sonarqube to this version with only minor modifications.
 [#4]: https://github.com/markt-de/puppet-sonarqube/pull/4
 [#2]: https://github.com/markt-de/puppet-sonarqube/pull/2
 [#1]: https://github.com/markt-de/puppet-sonarqube/pull/1
+[md#76]: https://github.com/maestrodev/puppet-sonarqube/issues/76

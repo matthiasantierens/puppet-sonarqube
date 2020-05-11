@@ -111,7 +111,7 @@ class sonarqube (
   Hash $https = {},
   Stdlib::Absolutepath $installroot = '/usr/local',
   Hash $jdbc = {
-    url => 'jdbc:h2:tcp://localhost:9092/sonar',
+    url => 'jdbc:h2:tcp://127.0.0.1:9092/sonar',
     username => 'sonar',
     password => 'sonar',
     max_active => '50',
@@ -228,9 +228,21 @@ class sonarqube (
     creates => "${installroot}/${package_name}-${version}/bin",
     notify  => Service['sonarqube'],
   }
-  -> file { $script:
-    mode    => '0755',
-    content => epp("${module_name}/sonar.sh.epp"),
+  -> file_line { 'set PIDDIR in startup script':
+    ensure   => present,
+    path     => $script,
+    line     => "PIDDIR=${real_home}",
+    match    => '^PIDDIR=',
+    multiple => true,
+  }
+  -> file_line { 'set RUN_AS_USER in startup script':
+    ensure   => present,
+    path     => $script,
+    line     => "RUN_AS_USER=${user}",
+    match    => '^RUN_AS_USER=',
+    # insert after PIDDIR of no match is found
+    after    => '^PIDDIR=',
+    multiple => true,
   }
   -> file { "/etc/init.d/${service}":
     ensure => link,

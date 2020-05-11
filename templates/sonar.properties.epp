@@ -166,9 +166,13 @@ sonar.search.host=<%= $sonarqube::search_host %>
 #----- Credentials
 # Permissions to create tables and indexes must be granted to JDBC user.
 # The schema must be created first.
+<% if ($sonarqube::jdbc['url'] =~ /^jdbc:h2/) { -%>
+sonar.embeddedDatabase.port:               9092
+<% } else { -%>
 sonar.jdbc.url:         <%= $sonarqube::jdbc['url'] %>
 sonar.jdbc.username:    <%= $sonarqube::jdbc['username'] %>
 sonar.jdbc.password:    <%= $sonarqube::jdbc['password'] %>
+<% } -%>
 
 #----- Embedded database H2
 # Note : it does not accept connections from remote hosts, so the
