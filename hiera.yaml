@@ -17,5 +17,7 @@ hierarchy:
     paths:
       - "os/%{facts.os.family}.yaml"
       - "os/%{facts.os.name}.yaml"
+  - name: 'Kernel-Architecture to identify sonarqube binary folder'
+    path: "%{facts.kernel}-%{facts.os.architecture}.yaml"
   - name: 'common'
     path: 'common.yaml'

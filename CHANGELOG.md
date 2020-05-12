@@ -12,11 +12,13 @@ This is a new major release in an ongoing effort to modernize the module.
 - Add support for RHEL/CentOS 8, Ubuntu 20.04
 
 ### Changed
+- Change default of `$version` to 7.9 (current LTS version)
 - Remove JDBC_URL from config for embedded database (avoids a SonarQube warning)
 - Remove template for sonar.sh (use the one that comes bundled with SonarQube)
 - Change name of PID file in systemd service (requires the bundled sonar.sh)
 - Officially drop support for SonarQube <7.0
 - Enforce Puppet 4 data types
+- Migrate `params.pp` to Hiera module data
 - Replace dependency puppet/wget with puppet/archive ([#4])
 - Convert templates from ERB to EPP
 - Convert to Puppet Strings

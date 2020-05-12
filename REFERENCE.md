@@ -8,13 +8,15 @@
 _Public Classes_
 
 * [`sonarqube`](#sonarqube): Install and configure SonarQube and additional components
-* [`sonarqube::params`](#sonarqubeparams): Class: sonarqube::params
 * [`sonarqube::runner`](#sonarquberunner): Install and configure SonarQube Runner
 
 _Private Classes_
 
+* `sonarqube::config`: Configure SonarQube
+* `sonarqube::install`: Install SonarQube package
 * `sonarqube::runner::config`: Configuration of SonarQube Runner
 * `sonarqube::runner::install`: Installation of SonarQube Runner
+* `sonarqube::service`: Setup SonarQube service
 
 **Defined types**
 
@@ -38,8 +40,6 @@ Data type: `String`
 Specifies the architecture of the installation archive that should be
 downloaded.
 Default: Automatically selected depending on the OS architecture.
-
-Default value: $sonarqube::params::arch
 
 ##### `ce_java_opts`
 
@@ -72,8 +72,6 @@ Data type: `String`
 
 Specifies the context path for the application.
 
-Default value: '/'
-
 ##### `crowd`
 
 Data type: `Hash`
@@ -81,23 +79,17 @@ Data type: `Hash`
 Specifies whether the Crowd plugin should be enabled.
 Default: `false`
 
-Default value: {}
-
 ##### `download_dir`
 
 Data type: `Stdlib::Absolutepath`
 
 The directory where the SonarQube installation archive should be stored.
 
-Default value: '/usr/local/src'
-
 ##### `download_url`
 
 Data type: `String`
 
 The URL from which the SonarQube installation archive should be downloaded.
-
-Default value: 'https://binaries.sonarsource.com/Distribution/sonarqube'
 
 ##### `edition`
 
@@ -106,23 +98,17 @@ Data type: `String`
 Specifies the edition of SonarQube that should be installed.
 Default: `community`
 
-Default value: 'community'
-
 ##### `group`
 
 Data type: `String`
 
 The group for the SonarQube application.
 
-Default value: 'sonar'
-
 ##### `home`
 
-Data type: `Optional[String]`
+Data type: `String`
 
 SonarQube's data directory.
-
-Default value: `undef`
 
 ##### `host`
 
@@ -138,15 +124,11 @@ Data type: `Hash`
 
 Specifies the HTTP Proxy that should be used for SonarQube's Update Center.
 
-Default value: {}
-
 ##### `https`
 
 Data type: `Hash`
 
 Specifies the required configuration to enable HTTPS support.
-
-Default value: {}
 
 ##### `installroot`
 
@@ -155,25 +137,11 @@ Data type: `Stdlib::Absolutepath`
 Specifies the base directory where SonarQube should be installed. A new
 subdirectory for each version of SonarQube will be created.
 
-Default value: '/usr/local'
-
 ##### `jdbc`
 
 Data type: `Hash`
 
 Specifies the database configuration for SonarQube.
-
-Default value: {
-    url => 'jdbc:h2:tcp://localhost:9092/sonar',
-    username => 'sonar',
-    password => 'sonar',
-    max_active => '50',
-    max_idle => '5',
-    min_idle => '2',
-    max_wait => '5000',
-    min_evictable_idle_time_millis => '600000',
-    time_between_eviction_runs_millis => '30000',
-  }
 
 ##### `ldap`
 
@@ -181,15 +149,17 @@ Data type: `Hash`
 
 Specifies the required configuration to enable LDAP authentication.
 
-Default value: {}
-
 ##### `log_folder`
 
 Data type: `Stdlib::Absolutepath`
 
 Specifies the log directory for SonarQube.
 
-Default value: '/var/local/sonar/logs'
+##### `package_name`
+
+Data type: `String`
+
+Specifies the basename of the SonarQube archive.
 
 ##### `pam`
 
@@ -197,15 +167,11 @@ Data type: `Hash`
 
 Specifies the required configuration to enable PAM authentication.
 
-Default value: {}
-
 ##### `port`
 
 Data type: `Integer`
 
 Specifies the TCP port for SonarQube.
-
-Default value: 9000
 
 ##### `portajp`
 
@@ -213,23 +179,17 @@ Data type: `Integer`
 
 Specifies the port to use for the AJP communication protocol.
 
-Default value: -
-
 ##### `profile`
 
 Data type: `Boolean`
 
 Specifies wether profiling should be enabled for SonarQube.
 
-Default value: `false`
-
 ##### `search_host`
 
 Data type: `String`
 
 Specifies the IP/hostname of the Elasticsearch server.
-
-Default value: '127.0.0.1'
 
 ##### `search_java_opts`
 
@@ -245,15 +205,11 @@ Data type: `Integer`
 
 Specifies the TCP port of the Elasticsearch server.
 
-Default value: 9001
-
 ##### `service`
 
 Data type: `String`
 
 Specifies the name of the SonarQube system service.
-
-Default value: 'sonar'
 
 ##### `updatecenter`
 
@@ -261,15 +217,11 @@ Data type: `Boolean`
 
 Specifies whether to enable the Update Center.
 
-Default value: `true`
-
 ##### `user`
 
 Data type: `String`
 
 The user for the SonarQube application.
-
-Default value: 'sonar'
 
 ##### `user_system`
 
@@ -277,15 +229,11 @@ Data type: `Boolean`
 
 Specifies whether the SonarQube user should be a system user.
 
-Default value: `true`
-
 ##### `version`
 
 Data type: `String`
 
 Specifies the version of SonarQube that should be installed/updated.
-
-Default value: '4.5.5'
 
 ##### `web_java_opts`
 
@@ -294,10 +242,6 @@ Data type: `Optional[String]`
 Optional JVM options for SonarQube's web server.
 
 Default value: `undef`
-
-### sonarqube::params
-
-Class: sonarqube::params
 
 ### sonarqube::runner
 

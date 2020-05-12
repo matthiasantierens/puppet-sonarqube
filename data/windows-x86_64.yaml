@@ -1,0 +1,2 @@
+---
+sonarqube::arch: 'windows-x86-64'
