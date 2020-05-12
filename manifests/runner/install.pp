@@ -10,7 +10,7 @@ class sonarqube::runner::install {
     }
   }
 
-  $tmpzip = "/usr/local/src/${sonarqube::runner::package_name}-dist-${sonarqube::runner::version}.zip"
+  $tmpzip = "/usr/local/src/${sonarqube::runner::distribution_name}-dist-${sonarqube::runner::version}.zip"
 
   archive { 'download-sonar-runner':
     ensure => present,
@@ -18,13 +18,13 @@ class sonarqube::runner::install {
     source => "${sonarqube::runner::download_url}/${sonarqube::runner::version}/sonar-runner-dist-${sonarqube::runner::version}.zip",
   }
 
-  -> file { "${sonarqube::runner::installroot}/${sonarqube::runner::package_name}-${sonarqube::runner::version}":
+  -> file { "${sonarqube::runner::installroot}/${sonarqube::runner::distribution_name}-${sonarqube::runner::version}":
     ensure => directory,
   }
 
-  -> file { "${sonarqube::runner::installroot}/${sonarqube::runner::package_name}":
+  -> file { "${sonarqube::runner::installroot}/${sonarqube::runner::distribution_name}":
     ensure => link,
-    target => "${sonarqube::runner::installroot}/${sonarqube::runner::package_name}-${sonarqube::runner::version}",
+    target => "${sonarqube::runner::installroot}/${sonarqube::runner::distribution_name}-${sonarqube::runner::version}",
   }
 
   -> exec { 'unzip-sonar-runner':
@@ -35,11 +35,11 @@ class sonarqube::runner::install {
 
   # Sonar settings for terminal sessions.
   file { '/etc/profile.d/sonarhome.sh':
-    content => "export SONAR_RUNNER_HOME=${sonarqube::runner::installroot}/${sonarqube::runner::package_name}-${sonarqube::runner::version}",
+    content => "export SONAR_RUNNER_HOME=${sonarqube::runner::installroot}/${sonarqube::runner::distribution_name}-${sonarqube::runner::version}",
   }
 
   file { '/usr/bin/sonar-runner':
     ensure => link,
-    target => "${sonarqube::runner::installroot}/${sonarqube::runner::package_name}-${sonarqube::runner::version}/bin/sonar-runner",
+    target => "${sonarqube::runner::installroot}/${sonarqube::runner::distribution_name}-${sonarqube::runner::version}/bin/sonar-runner",
   }
 }

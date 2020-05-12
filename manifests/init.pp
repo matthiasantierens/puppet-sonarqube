@@ -60,7 +60,7 @@
 # @param log_folder
 #   Specifies the log directory for SonarQube.
 #
-# @param package_name
+# @param distribution_name
 #   Specifies the basename of the SonarQube archive.
 #
 # @param pam
@@ -117,7 +117,7 @@ class sonarqube (
   Hash $jdbc,
   Hash $ldap,
   Stdlib::Absolutepath $log_folder,
-  String $package_name,
+  String $distribution_name,
   Hash $pam,
   Integer $port,
   Integer $portajp,
@@ -150,7 +150,7 @@ class sonarqube (
   $plugin_dir = "${extensions_dir}/plugins"
 
   $installdir = "${sonarqube::installroot}/${sonarqube::service}"
-  $tmpzip = "${sonarqube::download_dir}/${sonarqube::package_name}-${sonarqube::version}.zip"
+  $tmpzip = "${sonarqube::download_dir}/${sonarqube::distribution_name}-${sonarqube::version}.zip"
   $script = "${installdir}/bin/${sonarqube::arch}/sonar.sh"
 
   class { 'sonarqube::install': }

@@ -16,6 +16,7 @@ This is a new major release in an ongoing effort to modernize the module.
 - Remove JDBC_URL from config for embedded database (avoids a SonarQube warning)
 - Remove template for sonar.sh (use the one that comes bundled with SonarQube)
 - Change name of PID file in systemd service (requires the bundled sonar.sh)
+- Rename `$package_name` to `$distribution_name`
 - Officially drop support for SonarQube <7.0
 - Enforce Puppet 4 data types
 - Migrate `params.pp` to Hiera module data

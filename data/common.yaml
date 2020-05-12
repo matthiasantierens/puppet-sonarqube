@@ -22,7 +22,7 @@ sonarqube::jdbc:
 # LDAP and PAM are mutually exclusive. Setting $ldap will annihilate the setting of $pam
 sonarqube::ldap: {}
 sonarqube::log_folder: '/var/local/sonar/logs'
-sonarqube::package_name: 'sonarqube'
+sonarqube::distribution_name: 'sonarqube'
 sonarqube::pam: {}
 sonarqube::port: 9000
 sonarqube::portajp: -1
@@ -42,6 +42,6 @@ sonarqube::runner::jdbc:
   url: 'jdbc:h2:tcp://localhost:9092/sonar'
   username: 'sonar'
   password: 'sonar'
-sonarqube::runner::package_name: 'sonar-runner'
+sonarqube::runner::distribution_name: 'sonar-runner'
 sonarqube::runner::sonarqube_server: 'http://sonar.local:9000/'
 sonarqube::runner::version: '2.4'

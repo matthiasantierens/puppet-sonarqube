@@ -3,7 +3,7 @@ class sonarqube::runner (
   String $download_url,
   Stdlib::Absolutepath $installroot,
   Hash $jdbc,
-  String $package_name,
+  String $distribution_name,
   String $sonarqube_server,
   String $version,
 ) {

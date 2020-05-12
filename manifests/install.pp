@@ -7,9 +7,9 @@ class sonarqube::install {
 
   # Evaluate download URL
   if $sonarqube::edition == 'community' {
-    $source_url = "${sonarqube::download_url}/${sonarqube::package_name}-${sonarqube::version}.zip"
+    $source_url = "${sonarqube::download_url}/${sonarqube::distribution_name}-${sonarqube::version}.zip"
   } else {
-    $source_url = "${sonarqube::download_url}/${sonarqube::package_name}-${sonarqube::edition}-${sonarqube::version}.zip"
+    $source_url = "${sonarqube::download_url}/${sonarqube::distribution_name}-${sonarqube::edition}-${sonarqube::version}.zip"
   }
 
   if ! defined(Package[unzip]) {
@@ -43,12 +43,12 @@ class sonarqube::install {
     ensure => directory,
     mode   => '0700',
   }
-  -> file { "${sonarqube::installroot}/${sonarqube::package_name}-${sonarqube::version}":
+  -> file { "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}":
     ensure => directory,
   }
   -> file { $sonarqube::installdir:
     ensure => link,
-    target => "${sonarqube::installroot}/${sonarqube::package_name}-${sonarqube::version}",
+    target => "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}",
     notify => Class['sonarqube::service'],
   }
   -> sonarqube::move_to_home { 'data': }
@@ -59,8 +59,8 @@ class sonarqube::install {
   # Uncompress (new) sonar version
   -> exec { 'install sonarqube distribution':
     command => "unzip -o ${sonarqube::tmpzip} -d ${sonarqube::installroot} && chown -R \
-      ${sonarqube::user}:${sonarqube::group} ${sonarqube::installroot}/${sonarqube::package_name}-${sonarqube::version} && chown -R ${sonarqube::user}:${sonarqube::group} ${sonarqube::home}",
-    creates => "${sonarqube::installroot}/${sonarqube::package_name}-${sonarqube::version}/bin",
+      ${sonarqube::user}:${sonarqube::group} ${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version} && chown -R ${sonarqube::user}:${sonarqube::group} ${sonarqube::home}",
+    creates => "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}/bin",
     notify  => Class['sonarqube::service'],
   }
 
@@ -78,7 +78,7 @@ class sonarqube::install {
     command     => "/tmp/cleanup-old-sonarqube-versions.sh ${sonarqube::installroot} ${sonarqube::version}",
     path        => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin',
     refreshonly => true,
-    subscribe   => File["${sonarqube::installroot}/${sonarqube::package_name}-${sonarqube::version}"],
+    subscribe   => File["${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}"],
   }
 
   # The plugins directory. Useful to later reference it from the plugin definition
