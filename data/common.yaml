@@ -2,6 +2,8 @@
 sonarqube::arch: 'linux-x86-64'
 sonarqube::context_path: '/'
 sonarqube::crowd: {}
+sonarqube::distribution_name: 'sonarqube'
+sonarqube::download_dir: '/usr/local/src'
 sonarqube::download_url: 'https://binaries.sonarsource.com/Distribution/sonarqube'
 sonarqube::edition: 'community'
 sonarqube::group: 'sonar'
@@ -22,15 +24,14 @@ sonarqube::jdbc:
 # LDAP and PAM are mutually exclusive. Setting $ldap will annihilate the setting of $pam
 sonarqube::ldap: {}
 sonarqube::log_folder: '/var/local/sonar/logs'
-sonarqube::distribution_name: 'sonarqube'
 sonarqube::pam: {}
+sonarqube::plugin_tmpdir: '/tmp'
 sonarqube::port: 9000
 sonarqube::portajp: -1
 sonarqube::profile: false
 sonarqube::search_host: '127.0.0.1'
 sonarqube::search_port: 9001
 sonarqube::service: 'sonar'
-sonarqube::download_dir: '/usr/local/src'
 sonarqube::updatecenter: true
 sonarqube::user: 'sonar'
 sonarqube::user_system: true

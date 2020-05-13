@@ -66,6 +66,11 @@
 # @param pam
 #   Specifies the required configuration to enable PAM authentication.
 #
+# @param plugin_tmpdir
+#   Specifies the temporary download directory for plugin files. This defaults
+#   to `/tmp`. Changing it to something else would eleminate the need to
+#   download plugin files again after `/tmp` was purged.
+#
 # @param port
 #   Specifies the TCP port for SonarQube.
 #
@@ -119,6 +124,7 @@ class sonarqube (
   Stdlib::Absolutepath $log_folder,
   String $distribution_name,
   Hash $pam,
+  Stdlib::Absolutepath $plugin_tmpdir,
   Integer $port,
   Integer $portajp,
   Boolean $profile,
