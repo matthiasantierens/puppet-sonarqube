@@ -39,6 +39,7 @@ class { 'sonarqube':
 A more complex example could look like this:
 
 ```puppet
+class { 'java': }
 class { 'sonarqube':
   version       => '7.9,
   edition       => 'community',
@@ -69,7 +70,7 @@ class { 'sonarqube':
 
 ### SonarQube Plugins
 
-The `sonarqube::plugin` defined type can be used to install SonarQube plugins. Plugins are available from many different sources, the modules support multiple download sources. It will also purge old plugin versions.
+The `sonarqube::plugin` defined type can be used to install SonarQube plugins. Plugins are available from many different sources, so the module supports multiple download sources as well. It will also purge old plugin versions.
 
 Probably the best source for plugins is SonarSource. To download and install one of these plugins, use the following example:
 
@@ -90,6 +91,8 @@ sonarqube::plugin { 'sonar-checkstyle-plugin':
 }
 ```
 
+Note that the GitHub project must provide jar files for its releases. Otherwise the download is prone to fail.
+
 If none of these methods work, you may also specify a direct download URL, which should be seen as a last resort:
 
 ```plugin
@@ -99,19 +102,21 @@ sonarqube::plugin { 'sonar-checkstyle-plugin':
 }
 ```
 
+Note that in this case the filename must exactly match the plugin name and version, otherwise this will not work.
+
 Finally the old way to install plugins using Maven is still available, but it requires to set the `$legacy` parameter:
 
 ```puppet
 class { 'maven::maven': }
 
 sonarqube::plugin { 'sonar-javascript-plugin':
-  legacy   => true,
-  groupid  => 'org.sonarsource.javascript',
-  version  => '2.10',
+  legacy  => true,
+  groupid => 'org.sonarsource.javascript',
+  version => '2.10',
 }
 ```
 
-The now-defunct `maestrodev/puppet-maven` module is required to make this work. And it is most likely not very useful on newer versions of SonarQube and may be removed in future versions. (Please open an issue on GitHub if you think this is still useful.)
+The defunct `maestrodev/puppet-maven` module is required to make this work. And it is most likely not very useful on newer versions of SonarQube and may be removed in future versions of this module. (Please open an issue on GitHub if you think this is still useful.)
 
 ### LDAP Configuration
 
@@ -125,18 +130,15 @@ $ldap = {
 }
 
 class { 'java': }
-class { 'maven::maven': }
 -> class { 'sonarqube':
-  ldap => $ldap,
+  ldap    => $ldap,
+  version => '7.9'
 }
 
-# Do not forget to add the SonarQube LDAP plugin that is not provided out of the box.
-# Same thing with Crowd or PAM.
+# Do not forget to add the SonarQube LDAP plugin that is not provided out of
+# the box on SonarQube versions older than 8.0. Same thing with Crowd or PAM.
 sonarqube::plugin { 'sonar-ldap-plugin':
-  groupid    => 'org.sonarsource.ldap',
-  artifactid => 'sonar-ldap-plugin',
-  version    => '1.5.1',
-  notify     => Service['sonar'],
+  version => '2.2.0.608',
 }
 ```
 
