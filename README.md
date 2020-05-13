@@ -21,6 +21,8 @@
 
 A puppet module to install and configure SonarQube (former Sonar).
 
+The main goal is compatibility with the latest LTS release of SonarQube. Older versions are not supported. However, newer versions should usually work too.
+
 ## Usage
 
 ### Basic usage
@@ -67,21 +69,49 @@ class { 'sonarqube':
 
 ### SonarQube Plugins
 
-The `sonarqube::plugin` defined type can be used to install SonarQube plugins. Note that Maven is required to download the plugins then.
+The `sonarqube::plugin` defined type can be used to install SonarQube plugins. Plugins are available from many different sources, the modules support multiple download sources. It will also purge old plugin versions.
 
-```puppet
-class { 'java': }
-class { 'maven::maven': }
-->
-class { 'sonarqube': }
+Probably the best source for plugins is SonarSource. To download and install one of these plugins, use the following example:
 
-sonarqube::plugin { 'sonar-javascript-plugin':
-  groupid    => 'org.sonarsource.javascript',
-  artifactid => 'sonar-javascript-plugin',
-  version    => '2.10',
-  notify     => Service['sonar'],
+```plugin
+sonarqube::plugin { 'sonar-kotlin-plugin':
+  version => '1.7.0.883',
 }
 ```
+
+Check https://binaries.sonarsource.com/Distribution/ for a list of available plugins.
+
+If the plugin is hosted on GitHub, then you only need to provide a GitHub identifier, which is essentially a combination of the GitHub username and project name:
+
+```plugin
+sonarqube::plugin { 'sonar-checkstyle-plugin':
+  version => '4.31',
+  ghid    => 'checkstyle/sonar-checkstyle',
+}
+```
+
+If none of these methods work, you may also specify a direct download URL, which should be seen as a last resort:
+
+```plugin
+sonarqube::plugin { 'sonar-checkstyle-plugin':
+  version => '4.31',
+  url     => 'https://github.com/checkstyle/sonar-checkstyle/releases/download/4.31/checkstyle-sonar-plugin-4.31.jar',
+}
+```
+
+Finally the old way to install plugins using Maven is still available, but it requires to set the `$legacy` parameter:
+
+```puppet
+class { 'maven::maven': }
+
+sonarqube::plugin { 'sonar-javascript-plugin':
+  legacy   => true,
+  groupid  => 'org.sonarsource.javascript',
+  version  => '2.10',
+}
+```
+
+The now-defunct `maestrodev/puppet-maven` module is required to make this work. And it is most likely not very useful on newer versions of SonarQube and may be removed in future versions. (Please open an issue on GitHub if you think this is still useful.)
 
 ### LDAP Configuration
 

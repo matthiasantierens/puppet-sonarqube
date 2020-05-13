@@ -21,7 +21,7 @@ _Private Classes_
 **Defined types**
 
 * [`sonarqube::move_to_home`](#sonarqubemove_to_home): Symlink a folder to SonarQube's installation directory
-* [`sonarqube::plugin`](#sonarqubeplugin): Install a SonarQube plugin
+* [`sonarqube::plugin`](#sonarqubeplugin): Manage SonarQube plugins: download, install, remove.
 
 ## Classes
 
@@ -155,7 +155,7 @@ Data type: `Stdlib::Absolutepath`
 
 Specifies the log directory for SonarQube.
 
-##### `package_name`
+##### `distribution_name`
 
 Data type: `String`
 
@@ -166,6 +166,14 @@ Specifies the basename of the SonarQube archive.
 Data type: `Hash`
 
 Specifies the required configuration to enable PAM authentication.
+
+##### `plugin_tmpdir`
+
+Data type: `Stdlib::Absolutepath`
+
+Specifies the temporary download directory for plugin files. This defaults
+to `/tmp`. Changing it to something else would eleminate the need to
+download plugin files again after `/tmp` was purged.
 
 ##### `port`
 
@@ -251,29 +259,11 @@ Install and configure SonarQube Runner
 
 The following parameters are available in the `sonarqube::runner` class.
 
-##### `package_name`
-
-Data type: `String`
-
-
-
-Default value: 'sonar-runner'
-
-##### `version`
-
-Data type: `String`
-
-
-
-Default value: '2.4'
-
 ##### `download_url`
 
 Data type: `String`
 
 
-
-Default value: 'http://repo1.maven.org/maven2/org/codehaus/sonar/runner/sonar-runner-dist'
 
 ##### `installroot`
 
@@ -281,7 +271,17 @@ Data type: `Stdlib::Absolutepath`
 
 
 
-Default value: '/usr/local'
+##### `jdbc`
+
+Data type: `Hash`
+
+
+
+##### `distribution_name`
+
+Data type: `String`
+
+
 
 ##### `sonarqube_server`
 
@@ -289,19 +289,11 @@ Data type: `String`
 
 
 
-Default value: 'http://sonar.local:9000/'
+##### `version`
 
-##### `jdbc`
-
-Data type: `Hash`
+Data type: `String`
 
 
-
-Default value: {
-    url      => 'jdbc:h2:tcp://localhost:9092/sonar',
-    username => 'sonar',
-    password => 'sonar',
-  }
 
 ## Defined types
 
@@ -321,7 +313,7 @@ Data type: `Stdlib::Absolutepath`
 
 ### sonarqube::plugin
 
-Install a SonarQube plugin
+Manage SonarQube plugins: download, install, remove.
 
 #### Parameters
 
@@ -344,6 +336,16 @@ Default: `present`
 
 Default value: present
 
+##### `ghid`
+
+Data type: `Optional[String]`
+
+Specifies a combination of a GitHub username and project name,
+for example `myuser/sonar-exampleplugin`. This is used to generate
+the download URL.
+
+Default value: `undef`
+
 ##### `groupid`
 
 Data type: `String`
@@ -352,9 +354,28 @@ Specifies the groupid to use with maven.
 
 Default value: 'org.codehaus.sonar-plugins'
 
+##### `url`
+
+Data type: `Optional[String]`
+
+A direct download URL that points to the .jar file for the specified plugin.
+The filename must match the values of `$name` and `$version`, otherwise the
+cleanup script may malfunction.
+
+Default value: `undef`
+
 ##### `version`
 
 Data type: `String`
 
-Specifies the version of the plugin.
+Specifies the version of the plugin. This is also required to find
+and purge old plugin versions.
+
+##### `legacy`
+
+Data type: `Boolean`
+
+
+
+Default value: `false`
 
