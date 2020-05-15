@@ -70,7 +70,7 @@ class { 'sonarqube':
 
 ### SonarQube Plugins
 
-The `sonarqube::plugin` defined type can be used to install SonarQube plugins. Plugins are available from many different sources, so the module supports multiple download sources as well. It will also purge old plugin versions.
+The `sonarqube::plugin` defined type can be used to install SonarQube plugins. Plugins are available from many different sources, so this module supports multiple download sources as well. It will also purge old plugin versions.
 
 A plugin can be removed by setting the parameter `ensure` to `absent`.
 
@@ -82,7 +82,8 @@ sonarqube::plugin { 'sonar-kotlin-plugin':
 }
 ```
 
-Check https://binaries.sonarsource.com/Distribution/ for a list of available plugins.
+Be sure to use the full version number as demonstrated in this example.
+Check https://binaries.sonarsource.com/Distribution/ and https://docs.sonarqube.org/latest/analysis/languages/overview/ for a list of available plugins.
 
 If the plugin is hosted on GitHub, then you only need to provide a GitHub identifier, which is essentially a combination of the GitHub username and project name:
 
