@@ -14,7 +14,7 @@ describe 'sonarqube::plugin', type: :define do
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.not_to contain_archive("download sonarqube plugin #{plugin_name}-#{plugin_version}.jar from SonarSource") }
+        it { is_expected.not_to contain_archive("download plugin #{plugin_name}-#{plugin_version}.jar from SonarSource") }
         it { is_expected.to contain_file("/var/local/sonar/extensions/plugins/#{plugin_name}-#{plugin_version}.jar").with_ensure('absent') }
         it { is_expected.not_to contain_exec("remove old versions of #{plugin_name}") }
       end
@@ -29,7 +29,7 @@ describe 'sonarqube::plugin', type: :define do
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_archive("download sonarqube plugin #{plugin_name}-#{plugin_version}.jar from SonarSource").with_source("https://binaries.sonarsource.com/Distribution/#{plugin_name}/#{plugin_name}-#{plugin_version}.jar") } # rubocop:disable Metrics/LineLength
+        it { is_expected.to contain_archive("download plugin #{plugin_name}-#{plugin_version}.jar from SonarSource").with_source("https://binaries.sonarsource.com/Distribution/#{plugin_name}/#{plugin_name}-#{plugin_version}.jar") } # rubocop:disable Metrics/LineLength
         it { is_expected.to contain_file("/var/local/sonar/extensions/plugins/#{plugin_name}-#{plugin_version}.jar").with_owner('sonar') }
         it { is_expected.to contain_exec("remove old versions of #{plugin_name}") }
       end
@@ -46,7 +46,7 @@ describe 'sonarqube::plugin', type: :define do
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_archive("download sonarqube plugin #{plugin_name}-#{plugin_version}.jar from GitHub").with_source("https://github.com/#{ghid}/releases/download/#{plugin_version}/#{plugin_name}-#{plugin_version}.jar") } # rubocop:disable Metrics/LineLength
+        it { is_expected.to contain_archive("download plugin #{plugin_name}-#{plugin_version}.jar from GitHub").with_source("https://github.com/#{ghid}/releases/download/#{plugin_version}/#{plugin_name}-#{plugin_version}.jar") } # rubocop:disable Metrics/LineLength
         it { is_expected.to contain_file("/var/local/sonar/extensions/plugins/#{plugin_name}-#{plugin_version}.jar").with_owner('sonar') }
         it { is_expected.to contain_exec("remove old versions of #{plugin_name}") }
       end
@@ -63,7 +63,7 @@ describe 'sonarqube::plugin', type: :define do
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_archive("download sonarqube plugin #{plugin_name}-#{plugin_version}.jar").with_source(plugin_url) }
+        it { is_expected.to contain_archive("download plugin #{plugin_name}-#{plugin_version}.jar").with_source(plugin_url) }
         it { is_expected.to contain_file("/var/local/sonar/extensions/plugins/#{plugin_name}-#{plugin_version}.jar").with_owner('sonar') }
         it { is_expected.to contain_exec("remove old versions of #{plugin_name}") }
       end

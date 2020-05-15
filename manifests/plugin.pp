@@ -44,7 +44,7 @@ define sonarqube::plugin (
 
     # Use direct download URL for installation
     if $url {
-      archive { "download sonarqube plugin ${plugin_name}":
+      archive { "download plugin ${plugin_name}":
         ensure => present,
         path   => $plugin_tmp,
         source => $url,
@@ -60,7 +60,7 @@ define sonarqube::plugin (
       # pattern, then the direct download method should be used.
       $_ghurl = "https://github.com/${ghid}/releases/download/${version}/${artifactid}-${version}.jar"
 
-      archive { "download sonarqube plugin ${plugin_name} from GitHub":
+      archive { "download plugin ${plugin_name} from GitHub":
         ensure => present,
         path   => $plugin_tmp,
         source => $_ghurl,
@@ -76,7 +76,7 @@ define sonarqube::plugin (
       # this pattern for years to come.
       $_sonarurl = "https://binaries.sonarsource.com/Distribution/${artifactid}/${artifactid}-${version}.jar"
 
-      archive { "download sonarqube plugin ${plugin_name} from SonarSource":
+      archive { "download plugin ${plugin_name} from SonarSource":
         ensure => present,
         path   => $plugin_tmp,
         source => $_sonarurl,
