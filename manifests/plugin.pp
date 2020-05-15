@@ -100,7 +100,7 @@ define sonarqube::plugin (
         ],
       }
     } else {
-      fail("Unable to install plugin ${artifactid}: usage error. Missing parameters")
+      fail("Unable to install plugin ${artifactid}: usage error. Missing parameters") # lint:ignore:check_i18n
     }
 
     # Copy plugin from tmp location to plugin directory.

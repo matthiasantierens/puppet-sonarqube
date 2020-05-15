@@ -59,7 +59,7 @@ class sonarqube::install {
   # Uncompress (new) sonar version
   -> exec { 'install sonarqube distribution':
     command => "unzip -o ${sonarqube::tmpzip} -d ${sonarqube::installroot} && chown -R \
-      ${sonarqube::user}:${sonarqube::group} ${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version} && chown -R ${sonarqube::user}:${sonarqube::group} ${sonarqube::home}",
+      ${sonarqube::user}:${sonarqube::group} ${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version} && chown -R ${sonarqube::user}:${sonarqube::group} ${sonarqube::home}", # lint:ignore:140chars
     creates => "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}/bin",
     notify  => Class['sonarqube::service'],
   }

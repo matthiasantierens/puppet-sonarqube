@@ -35,7 +35,7 @@ class sonarqube::runner::install {
 
   # Sonar settings for terminal sessions.
   file { '/etc/profile.d/sonarhome.sh':
-    content => "export SONAR_RUNNER_HOME=${sonarqube::runner::installroot}/${sonarqube::runner::distribution_name}-${sonarqube::runner::version}",
+    content => "export SONAR_RUNNER_HOME=${sonarqube::runner::installroot}/${sonarqube::runner::distribution_name}-${sonarqube::runner::version}", # lint:ignore:140chars
   }
 
   file { '/usr/bin/sonar-runner':
