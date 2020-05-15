@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [4.0.0] - 2020-05-15
 This is a new major release in an ongoing effort to modernize the module.
 NOTE: The change of the PID file could cause issues; it is recommended to update SonarQube to a new version while deploying this module version to ensure that the startup script uses the new PID file.
 
@@ -67,7 +69,8 @@ migrate from maestrodev/sonarqube to this version with only minor modifications.
 ### Fixed
 - Fixes for SonarQube 7.9 LTS ([#1])
 
-[Unreleased]: https://github.com/markt-de/puppet-sonarqube/compare/v3.1.0...HEAD
+[Unreleased]: https://github.com/markt-de/puppet-sonarqube/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/markt-de/puppet-sonarqube/compare/v3.1.0...v4.0.0
 [3.1.0]: https://github.com/markt-de/puppet-sonarqube/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/markt-de/puppet-sonarqube/compare/v2.6.7...v3.0.0
 [#4]: https://github.com/markt-de/puppet-sonarqube/pull/4
