@@ -33,6 +33,8 @@ define sonarqube::plugin (
   Optional[String] $ghid = undef,
   Optional[String] $url = undef,
 ) {
+  include '::sonarqube'
+
   $plugin_name = "${artifactid}-${version}.jar"
   $plugin_tmp  = "${sonarqube::plugin_tmpdir}/${plugin_name}"
   $plugin      = "${sonarqube::plugin_dir}/${plugin_name}"
@@ -74,7 +76,7 @@ define sonarqube::plugin (
       # this pattern for years to come.
       $_sonarurl = "https://binaries.sonarsource.com/Distribution/${artifactid}/${artifactid}-${version}.jar"
 
-      archive { "download sonarqube plugin ${plugin_name} from GitHub":
+      archive { "download sonarqube plugin ${plugin_name} from SonarSource":
         ensure => present,
         path   => $plugin_tmp,
         source => $_sonarurl,

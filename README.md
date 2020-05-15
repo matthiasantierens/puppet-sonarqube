@@ -32,7 +32,7 @@ The minimum configuration should at least specify the desired version:
 ```puppet
 class { 'java': }
 class { 'sonarqube':
-  version => '7.9',
+  version => '7.9.3',
 }
 ```
 
@@ -41,7 +41,7 @@ A more complex example could look like this:
 ```puppet
 class { 'java': }
 class { 'sonarqube':
-  version       => '7.9,
+  version       => '7.9.3,
   edition       => 'community',
   user          => 'sonar',
   group         => 'sonar',
@@ -72,6 +72,8 @@ class { 'sonarqube':
 
 The `sonarqube::plugin` defined type can be used to install SonarQube plugins. Plugins are available from many different sources, so the module supports multiple download sources as well. It will also purge old plugin versions.
 
+A plugin can be removed by setting the parameter `ensure` to `absent`.
+
 Probably the best source for plugins is SonarSource. To download and install one of these plugins, use the following example:
 
 ```plugin
@@ -85,7 +87,7 @@ Check https://binaries.sonarsource.com/Distribution/ for a list of available plu
 If the plugin is hosted on GitHub, then you only need to provide a GitHub identifier, which is essentially a combination of the GitHub username and project name:
 
 ```plugin
-sonarqube::plugin { 'sonar-checkstyle-plugin':
+sonarqube::plugin { 'checkstyle-sonar-plugin':
   version => '4.31',
   ghid    => 'checkstyle/sonar-checkstyle',
 }
@@ -96,9 +98,9 @@ Note that the GitHub project must provide jar files for its releases. Otherwise 
 If none of these methods work, you may also specify a direct download URL, which should be seen as a last resort:
 
 ```plugin
-sonarqube::plugin { 'sonar-checkstyle-plugin':
-  version => '4.31',
-  url     => 'https://github.com/checkstyle/sonar-checkstyle/releases/download/4.31/checkstyle-sonar-plugin-4.31.jar',
+sonarqube::plugin { 'sonar-detekt':
+  version => '2.0.0',
+  url     => 'https://github.com/detekt/sonar-kotlin/releases/download/sonar-detekt-2.0.0.jar',
 }
 ```
 
@@ -132,7 +134,7 @@ $ldap = {
 class { 'java': }
 -> class { 'sonarqube':
   ldap    => $ldap,
-  version => '7.9'
+  version => '7.9.3'
 }
 
 # Do not forget to add the SonarQube LDAP plugin that is not provided out of

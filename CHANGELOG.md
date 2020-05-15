@@ -6,9 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 This is a new major release in an ongoing effort to modernize the module.
+NOTE: The change of the PID file could cause issues; it is recommended to update SonarQube to a new version while deploying this module version to ensure that the startup script uses the new PID file.
 
 ### Added
 - Enable unit/acceptance tests on Travis CI
+- Add unit/acceptance tests for plugin management
 - Add support for RHEL/CentOS 8, Ubuntu 20.04
 - Add new ways to download plugins: SonarSource, GitHub, direct download URL
 

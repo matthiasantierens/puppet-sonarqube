@@ -48,7 +48,7 @@ describe 'sonarqube' do
   end
 
   context 'when installing LTS version' do
-    let(:version) { '7.9' }
+    let(:version) { '7.9.3' }
 
     it_behaves_like :sonar_common
 
@@ -67,8 +67,6 @@ describe 'sonarqube' do
       end
 
       it { apply_manifest(pp, catch_failures: true) }
-      # XXX: plugin installation no longer working on recent versions
-      # it { expect(file("#{home}/extensions/plugins/sonar-ldap-plugin-1.4.jar")).to be_file }
       it { expect(file("#{installroot}/conf/sonar.properties").content).to match(%r{^ldap.url=ldap://myserver.mycompany.com}) }
       it { expect(file("#{installroot}/conf/sonar.properties").content).to match(%r{^sonar.security.localUsers=foo,bar}) }
     end
