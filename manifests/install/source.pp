@@ -1,6 +1,6 @@
 # @summary Install SonarQube package
 # @api private
-class sonarqube::install {
+class sonarqube::install::source {
   Sonarqube::Move_to_home {
     home => $sonarqube::home,
   }
