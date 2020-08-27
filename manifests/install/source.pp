@@ -1,116 +1,88 @@
-# install sonarqube from source
-class sonarqube::install::source {
-
-  # this class intended to be used from sonarqube::install class
-  assert_private()
-
-  $arch           = $::sonarqube::arch
-  $config         = $::sonarqube::config
-  $download_dir   = $::sonarqube::download_dir
-  $download_url   = $::sonarqube::download_url
-  $extensions_dir = $::sonarqube::extensions_dir
-  $group          = $::sonarqube::group
-  $installdir     = $::sonarqube::installdir
-  $installroot    = $::sonarqube::installroot
-  $package_name   = $::sonarqube::package_name
-  $plugin_dir     = $::sonarqube::plugin_dir
-  $real_home      = $::sonarqube::real_home
-  $service        = $::sonarqube::service
-  $user           = $::sonarqube::user
-  $user_system    = $::sonarqube::user_system
-  $version        = $::sonarqube::version
-
-  validate_absolute_path($download_dir)
-  Exec {
-    path => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin',
-  }
-  File {
-    owner => $user,
-    group => $group,
-  }
-
-  # wget from https://github.com/maestrodev/puppet-wget
-  include ::wget
-
+# @summary Install SonarQube package
+# @api private
+class sonarqube::install {
   Sonarqube::Move_to_home {
-    home => $real_home,
+    home => $sonarqube::home,
   }
 
-  $tmpzip = "${download_dir}/${package_name}-${version}.zip"
-  $script = "${installdir}/bin/${arch}/sonar.sh"
+  # Evaluate download URL
+  if $sonarqube::edition == 'community' {
+    $source_url = "${sonarqube::download_url}/${sonarqube::distribution_name}-${sonarqube::version}.zip"
+  } else {
+    $source_url = "${sonarqube::download_url}/${sonarqube::distribution_name}-${sonarqube::edition}-${sonarqube::version}.zip"
+  }
 
   if ! defined(Package[unzip]) {
     package { 'unzip':
       ensure => present,
-      before => Exec[untar],
+      before => Exec['install sonarqube distribution'],
     }
   }
 
-  wget::fetch { 'download-sonar':
-    source      => "${download_url}/${package_name}-${version}.zip",
-    destination => $tmpzip,
+  # Create user and group
+  user { $sonarqube::user:
+    ensure     => present,
+    home       => $sonarqube::home,
+    managehome => false,
+    system     => $sonarqube::user_system,
   }
-  # ===== Create folder structure =====
-  # so uncompressing new sonar versions at update time use the previous sonar home,
-  # installing new extensions and plugins over the old ones, reusing the db,...
+  -> group { $sonarqube::group:
+    ensure => present,
+    system => $sonarqube::user_system,
+  }
 
-  # Sonar home
-  -> file { $real_home:
+  # Download distribution archive
+  -> archive { 'download sonarqube distribution':
+    ensure => present,
+    path   => $sonarqube::tmpzip,
+    source => $source_url,
+  }
+
+  # Create folder structure
+  -> file { $sonarqube::home:
     ensure => directory,
     mode   => '0700',
   }
-  -> file { "${installroot}/${package_name}-${version}":
+  -> file { "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}":
     ensure => directory,
   }
-  -> file { $installdir:
+  -> file { $sonarqube::installdir:
     ensure => link,
-    target => "${installroot}/${package_name}-${version}",
-    notify => Service['sonarqube'],
+    target => "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}",
+    notify => Class['sonarqube::service'],
   }
   -> sonarqube::move_to_home { 'data': }
   -> sonarqube::move_to_home { 'extras': }
   -> sonarqube::move_to_home { 'extensions': }
   -> sonarqube::move_to_home { 'logs': }
-  # ===== Install SonarQube =====
-  -> exec { 'untar':
-    command => join(
-      [
-        "unzip -o ${tmpzip} -d ${installroot}",
-        "chown -R ${user}:${group} ${installroot}/${package_name}-${version}",
-        "chown -R ${user}:${group} ${real_home}",
-      ],
-      ' && '
-    ),
-    creates => "${installroot}/${package_name}-${version}/bin",
-    notify  => Service['sonarqube'],
-  }
-  -> file { $script:
-    mode    => '0755',
-    content => template('sonarqube/sonar.sh.erb'),
-  }
-  -> file { "/etc/init.d/${service}":
-    ensure => link,
-    target => $script,
+
+  # Uncompress (new) sonar version
+  -> exec { 'install sonarqube distribution':
+    command => "unzip -o ${sonarqube::tmpzip} -d ${sonarqube::installroot} && chown -R \
+      ${sonarqube::user}:${sonarqube::group} ${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version} && chown -R ${sonarqube::user}:${sonarqube::group} ${sonarqube::home}", # lint:ignore:140chars
+    creates => "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}/bin",
+    notify  => Class['sonarqube::service'],
   }
 
+  # Setup helper scripts to ensure that old versions of sonar and plugins
+  # are removed.
   file { '/tmp/cleanup-old-plugin-versions.sh':
-    content => template("${module_name}/cleanup-old-plugin-versions.sh.erb"),
+    content => epp("${module_name}/cleanup-old-plugin-versions.sh.epp"),
     mode    => '0755',
   }
   -> file { '/tmp/cleanup-old-sonarqube-versions.sh':
-    content => template("${module_name}/cleanup-old-sonarqube-versions.sh.erb"),
+    content => epp("${module_name}/cleanup-old-sonarqube-versions.sh.epp"),
     mode    => '0755',
   }
   -> exec { 'remove-old-versions-of-sonarqube':
-    command     => "/tmp/cleanup-old-sonarqube-versions.sh ${installroot} ${version}",
+    command     => "/tmp/cleanup-old-sonarqube-versions.sh ${sonarqube::installroot} ${sonarqube::version}",
     path        => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin',
     refreshonly => true,
-    subscribe   => File["${installroot}/${package_name}-${version}"],
+    subscribe   => File["${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}"],
   }
 
   # The plugins directory. Useful to later reference it from the plugin definition
-  file { $plugin_dir:
+  file { $sonarqube::plugin_dir:
     ensure => directory,
   }
-
 }
