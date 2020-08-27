@@ -16,19 +16,4 @@ class sonarqube::install::package {
   package { $package_name:
     ensure => $version,
   }
-  if $facts['service_provider'] == 'systemd' {
-    Package[$package_name]
-    -> file{ '/usr/lib/systemd/system/sonar.service':
-      ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
-      content => template("${module_name}/sonar.service.erb"),
-    }
-    ~> exec { 'sonar systemd daemon-reload':
-      command     => '/bin/systemctl daemon-reload',
-      refreshonly => true,
-    }
-  }
-
 }

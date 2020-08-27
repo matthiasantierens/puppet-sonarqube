@@ -137,7 +137,7 @@ class sonarqube (
   Boolean $user_system,
   String $version,
   Boolean $use_packages = false,
-  String $package_name = 'sonarqube',
+  String $package_name = 'sonar',
   # optional parameters
   Optional[String] $ce_java_opts = undef,
   Optional[Integer] $ce_workercount = undef,
