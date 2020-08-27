@@ -16,4 +16,35 @@ class sonarqube::install::package {
   package { $package_name:
     ensure => $version,
   }
+
+  # Create user and group
+  user { $sonarqube::user:
+    ensure     => present,
+    home       => $sonarqube::home,
+    managehome => false,
+    system     => $sonarqube::user_system,
+  }
+  -> group { $sonarqube::group:
+    ensure => present,
+    system => $sonarqube::user_system,
+  }
+
+  # Create folder structure
+  -> file { $sonarqube::home:
+    ensure => directory,
+    mode   => '0700',
+  }
+  -> file { "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}":
+    ensure => directory,
+  }
+  -> file { $sonarqube::installdir:
+    ensure => link,
+    target => "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}",
+    notify => Class['sonarqube::service'],
+  }
+  -> sonarqube::move_to_home { 'data': }
+  -> sonarqube::move_to_home { 'extras': }
+  -> sonarqube::move_to_home { 'extensions': }
+  -> sonarqube::move_to_home { 'logs': }
+
 }
