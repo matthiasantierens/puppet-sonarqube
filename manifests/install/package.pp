@@ -1,5 +1,8 @@
 # install sonarqube from packages
 class sonarqube::install::package {
+  Sonarqube::Move_to_home {
+    home => $sonarqube::home,
+  }
 
   # this class intended to be used from sonarqube::install class
   assert_private()
