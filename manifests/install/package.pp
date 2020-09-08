@@ -19,6 +19,13 @@ class sonarqube::install::package {
   package { $package_name:
     ensure => $version,
   }
+  -> exec {'echo variables':
+    command => "echo ${sonarqube::installroot}",
+  }
+  -> exec { 'move sonar to correct location':
+    command => "cp /opt/sonarqube-* ${sonarqube::installroot} && chown -R \
+      ${sonarqube::user}:${sonarqube::group} ${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version} && chown -R ${sonarqube::user}:${sonarqube::group} ${sonarqube::home}",
+  }
 
   # Create user and group
   user { $sonarqube::user:
