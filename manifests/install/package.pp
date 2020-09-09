@@ -7,15 +7,20 @@ class sonarqube::install::package {
   ## this class intended to be used from sonarqube::install class
   #assert_private()
 
-  #$arch         = $::sonarqube::arch
-  #$installdir   = $::sonarqube::installdir
   $package_name = $::sonarqube::package_name
   $version      = $::sonarqube::version
 
-  #$arch_dir = "${installdir}/bin/${arch}"
-  #$sonar_script = "${arch_dir}/sonar.sh"
-  #$pid_file = "${arch_dir}/SonarQube.pid"
+  if ! defined(Package[unzip]) {
+    package { 'unzip':
+      ensure => present,
+    }
+  }
 
+  if ! defined(Package[zip]) {
+    package { 'zip':
+      ensure => present,
+    }
+  }
 
   # Create user and group
   user { $sonarqube::user:
@@ -28,9 +33,8 @@ class sonarqube::install::package {
     ensure => present,
     system => $sonarqube::user_system,
   }
-  -> package { $package_name:
-    ensure => $version,
-  }
+
+
   # Create folder structure
   -> file { $sonarqube::home:
     ensure => directory,
@@ -44,15 +48,20 @@ class sonarqube::install::package {
     target => "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}",
     #notify => Class['sonarqube::service'],
   }
+
   -> sonarqube::move_to_home { 'data': }
   -> sonarqube::move_to_home { 'extras': }
   -> sonarqube::move_to_home { 'extensions': }
   -> sonarqube::move_to_home { 'logs': }
 
-  -> exec { 'move sonar to correct location':
-    command => "cp -r /opt/sonarqube-* ${sonarqube::installroot} && chown -R \
-      ${sonarqube::user}:${sonarqube::group} ${sonarqube::installroot} && chown -R ${sonarqube::user}:${sonarqube::group} ${sonarqube::home} || true",
+
+  -> package { $package_name:
+    ensure => $version,
     notify => Class['sonarqube::service'],
+  }
+
+  ~> exec { 'sometimes the permssions dont work':
+    command => "chown -R ${sonarqube::user}:${sonarqube::group} ${sonarqube::installroot}",
   }
 
   file { $sonarqube::plugin_dir:

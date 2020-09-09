@@ -5,16 +5,17 @@ Wants=network-online.target
 
 [Service]
 LimitNOFILE=65536
-LimitNPROC=4096
+LimitNPROC=8192
 Environment=MAX_MAP_COUNT=262144
 ExecStartPre=/sbin/sysctl -q -w vm.max_map_count=${MAX_MAP_COUNT}
-ExecStart=<%= $sonarqube::installroot -%>/sonar/bin/<%= regsubst($sonarqube::arch,'_','-') -%>/sonar.sh start
-ExecStop=<%= $sonarqube::installroot -%>/sonar/bin/<%= regsubst($sonarqube::arch,'_','-') -%>/sonar.sh stop
-ExecReload=<%= $sonarqube::installroot -%>/sonar/bin/<%= regsubst($sonarqube::arch,'_','-') -%>/sonar.sh restart
-PIDFile=<%= $sonarqube::home -%>/SonarQube.pid
-Type=forking
+ExecStart=/bin/java -Xms32m -Xmx32m -Djava.net.preferIPv4Stack=true -jar <%= $sonarqube::installroot -%>sonar/lib/sonar-application-<%= $sonarqube::version -%>.jar
+ExecStop=/bin/java -Xms32m -Xmx32m -Djava.net.preferIPv4Stack=true -jar <%= $sonarqube::installroot -%>sonar/lib/sonar-shutdowner-<%= $sonarqube::version -%>.jar
+Restart=always
+Type=simple
+TimeoutStartSec=5
 PermissionsStartOnly=true
 User=<%= $sonarqube::user %>
+Group=<%= $sonarqube::group %>
 
 [Install]
 WantedBy=multi-user.target
