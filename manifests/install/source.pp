@@ -49,7 +49,7 @@ class sonarqube::install::source {
   -> file { $sonarqube::installdir:
     ensure => link,
     target => "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}",
-    notify => Class['sonarqube::service'],
+    #notify => Class['sonarqube::service'],
   }
   -> sonarqube::move_to_home { 'data': }
   -> sonarqube::move_to_home { 'extras': }
@@ -59,9 +59,9 @@ class sonarqube::install::source {
   # Uncompress (new) sonar version
   -> exec { 'install sonarqube distribution':
     command => "unzip -o ${sonarqube::tmpzip} -d ${sonarqube::installroot} && chown -R \
-      ${sonarqube::user}:${sonarqube::group} ${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version} && chown -R ${sonarqube::user}:${sonarqube::group} ${sonarqube::home}", # lint:ignore:140chars
+      ${sonarqube::user}:${sonarqube::group} ${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version} && chown -R ${sonarqube::user}:${sonarqube::group} ${sonarqube::home} || true", # lint:ignore:140chars
     creates => "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}/bin",
-    notify  => Class['sonarqube::service'],
+    #notify  => Class['sonarqube::service'],
   }
 
   # Setup helper scripts to ensure that old versions of sonar and plugins

@@ -8,8 +8,8 @@ LimitNOFILE=65536
 LimitNPROC=8192
 Environment=MAX_MAP_COUNT=262144
 ExecStartPre=/sbin/sysctl -q -w vm.max_map_count=${MAX_MAP_COUNT}
-ExecStart=/bin/java -Xms32m -Xmx32m -Djava.net.preferIPv4Stack=true -jar <%= $sonarqube::installroot -%>sonar/lib/sonar-application-<%= $sonarqube::version -%>.jar
-ExecStop=/bin/java -Xms32m -Xmx32m -Djava.net.preferIPv4Stack=true -jar <%= $sonarqube::installroot -%>sonar/lib/sonar-shutdowner-<%= $sonarqube::version -%>.jar
+ExecStart=/bin/java -Xms32m -Xmx32m -Djava.net.preferIPv4Stack=true -jar <%= $sonarqube::installroot -%>/lib/sonar-application-<%= $sonarqube::version -%>.jar
+ExecStop=/bin/java -Xms32m -Xmx32m -Djava.net.preferIPv4Stack=true -jar <%= $sonarqube::installroot -%>/lib/sonar-shutdowner-<%= $sonarqube::version -%>.jar
 Restart=always
 Type=simple
 TimeoutStartSec=5

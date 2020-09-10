@@ -57,7 +57,7 @@ class sonarqube::install::package {
 
   -> package { $package_name:
     ensure => $version,
-    notify => Class['sonarqube::service'],
+    #notify => Class['sonarqube::service'],
   }
 
   ~> exec { 'sometimes the permssions dont work':

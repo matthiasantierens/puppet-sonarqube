@@ -136,7 +136,7 @@ class sonarqube (
   String $user,
   Boolean $user_system,
   String $version,
-  Boolean $use_packages = false,
+  Boolean $use_package = true,
   String $package_name = 'sonar',
   # optional parameters
   Optional[String] $ce_java_opts = undef,
@@ -159,7 +159,7 @@ class sonarqube (
 
   $installdir = "${sonarqube::installroot}/${sonarqube::service}"
   $tmpzip = "${sonarqube::download_dir}/${sonarqube::distribution_name}-${sonarqube::version}.zip"
-  $script = "${installdir}/bin/${sonarqube::arch}/sonar.sh"
+  $script = "${home}/bin/${sonarqube::arch}/sonar.sh"
 
   class { 'sonarqube::install': }
   -> class { 'sonarqube::config': }
